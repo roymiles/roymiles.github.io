@@ -8,4 +8,14 @@ redirect_from:
   - /about.html
 ---
 
-There is just a simple personal website for hosting my CV. I may post some more interesting content in the near future!
+This is just a simple personal website for hosting my CV. I may post some more interesting content in the near future!
+
+
+ _________________
+(       Hey       )
+ -----------------
+        o   ^__^
+         o  (oO)\_______
+            (__)\       )\/\
+             U  ||----w |
+                ||     ||
