@@ -12,4 +12,5 @@ date: 2021-10-25
 venue: 'arXiv'
 paperurl: 'https://arxiv.org/abs/2110.12844'
 citation: 'Miles, R., & Mikolajczyk, K. (2021). Network compression and faster inference using spatial basis filters.'
+figure: '/images/sbf.svg'
 ---

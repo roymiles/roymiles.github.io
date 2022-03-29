@@ -13,4 +13,5 @@ date: 2022-03-09
 venue: 'arXiv'
 paperurl: 'https://arxiv.org/abs/2112.00459'
 citation: 'Miles, R., Rodríguez, A. L., & Mikolajczyk, K. (2021). Information Theoretic Representation Distillation.'
+figure: '/images/itrd.svg'
 ---
