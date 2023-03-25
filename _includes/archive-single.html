@@ -53,17 +53,18 @@
           {% if post.figurepdf %}
             <embed src="{{ base_path }}{{ post.figurepdf }}" style="height: 300px;" />
           {% endif %}
-          {% if post.video %}
-            <video width="320" height="240" controls>
-              <source src="{{ base_path }}{{ post.video }}" type="video/mp4">
-            </video>
-          {% endif %}
         {% endif %}
 
     {% if post.excerpt and site.read_more != 'enabled' %}
     <p class="archive__item-excerpt" itemprop="description">{{ post.excerpt | markdownify }}</p>
     {% elsif post.excerpt and site.read_more == 'enabled' %}
     <p class="archive__item-excerpt" itemprop="description"><p>{{ post.excerpt | markdownify | remove: '<p>' | remove: '</p>' }}<strong><a href="{{ base_path }}{{ post.url }}" rel="permalink"> Read more</a></strong></p></p>
+    {% endif %}
+
+    {% if post.video %}
+      <video style="display: block;margin:0 auto" width="640" controls>
+        <source src="{{ base_path }}{{ post.video }}" type="video/mp4">
+      </video>
     {% endif %}
     
     {% if post.citation and post.paperurl %}
