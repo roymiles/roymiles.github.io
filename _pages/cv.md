@@ -16,17 +16,28 @@ Education
 
 Work experience
 ======
-* Summer 2017: Software Developer
+* Machine Learning Research Scientist Intern: 06/22 - 12/22
+  * **Samsung Research UK**
+  * Introduced a novel method for semi-supervised video object segmentation on mobile devices, using a
+unification of representation distillation and contrastive learning.
+  * Achieved competitive performance despite running up to ×5 faster, and with ×32 fewer parameters.
+  * This work has been accepted for presentation at CVPR 2023.
+
+* Software Engineer Intern: 06/17 - 09/17
   * **Waymont Consulting**
-  * Developed software to automate the testing of various in-house equipment. The design integrated phase noise, noise figure, band-width, crosstalk, and other algorithms into the test suite. The software was written in C++ on a mongoose server with a web GUI as the user interface. The software offered a hundredfold increase in efficiency over manual testing and is de- signed to be flexible and scaleable for new test types and equipment interfaces. VHDL implementation of a 64 bit parallel CRC block. The design was pipelined to calculate a running CRC for the incoming packets over 10GB ethernet.
+  * Developed a responsive web GUI with a C++ backend to automate tests for signal processing equipment.
+  * Replaced previously manual testing system and increased efficiency by hundredfold.
 
-* Summer 2016: Research Internship
+* Research Engineer Intern: 06/16 - 09/16
   * **Toshiba Research Europe**
-  * Characterise and linearise a channel between two USRP devices using the GNURadio signal processing environment. This involved modifying and designing out of tree blocks in C++. Investigating the feasibility of using the RC-5 Infrared (IR) remote control standard (as used for TVs and other consumer applications) for short-range, low-cost and low-data rate Internet of Things (IoT) applications.
+  * Designed out-of-tree blocks in C++ using the GNURadio signal processing environment to characterise
+  and linearise a communication channel between two USRP devices.
+  * Conducted research on utilising the RC-5 Infrared (IR) remote control standard for short-range, low-cost, and low-data rate IoT applications
 
-* Summer 2015: Research Internship
+* Research Engineer Intern: 06/15 - 09/15
   * **Toshiba Research Europe**
-  * Develop a GUI in MATLAB to control a motor driven positioner in harmony with a Vector Network Analyser, enabling the measurement of antenna patterns inside an anechoic chamber. Rewriting and modifying existing VB.NET code in MATLAB to allow the synchronisations of two X-Y positioners for characterising propagation channels. Documenting the commands of procedures for communication with an off-the-shell Software Defined Radio for use in wireless networks.
+  * Developed a MATLAB GUI to operate a motor-driven positioner in conjunction with a Vector Network Analyzer for measuring antenna patterns within an anechoic chamber.
+  * Modified existing VB.NET code to synchronize two X-Y positioners for analyzing propagation channels.
   
 Skills
 ======

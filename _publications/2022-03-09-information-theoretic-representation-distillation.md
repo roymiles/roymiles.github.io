@@ -10,8 +10,8 @@ Furthermore, we have shown the applicability of our method to binary networks,
 whereby we begin to bridge the performance gap between full-precision and
 binary networks.'
 date: 2022-03-09
-venue: 'arXiv'
-paperurl: 'https://arxiv.org/abs/2112.00459'
+venue: 'Proceedings of BMVA British Machine Vision Conference (BMVC’22)'
+paperurl: 'https://bmvc2022.mpi-inf.mpg.de/0385.pdf'
 citation: 'Miles, R., Rodríguez, A. L., & Mikolajczyk, K. (2021). Information Theoretic Representation Distillation.'
 figure: '/images/itrd.svg'
 ---

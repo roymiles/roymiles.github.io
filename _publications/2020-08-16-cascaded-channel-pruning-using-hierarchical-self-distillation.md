@@ -14,4 +14,5 @@ date: 2020-08-16
 venue: 'Proceedings of BMVA British Machine Vision Conference (BMVC’20)'
 paperurl: 'https://www.bmvc2020-conference.com/assets/papers/0525.pdf'
 citation: 'Miles, R., & Mikolajczyk, K. (2020). Cascaded channel pruning using hierarchical self-distillation. BMVC.'
+figurepdf: '/images/cascaded_pruning_self_distillation.pdf'
 ---

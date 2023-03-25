@@ -7,8 +7,9 @@ unification of representation distillation and contrastive learning.
 – Achieved competitive performance despite running up to ×5 faster, and with ×32 fewer parameters.
 – This work has been accepted for presentation at CVPR 2023.'
 date: 2023-03-14
-venue: 'CVPR'
+venue: 'Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR’23)'
 paperurl: 'https://arxiv.org/abs/2303.07815'
 citation: 'Miles, R., & Kerim Yucel, M., & Manganelli, B., Saa-Garriga, A. (2021). Information Theoretic Representation Distillation.'
-figure: '/images/mobilevos.pdf'
+figurepdf: '/images/mobilevos.pdf'
+video: '/images/FindingNemo.mp4'
 ---
