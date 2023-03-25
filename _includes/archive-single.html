@@ -48,7 +48,7 @@
 
         {% if post.collection == 'publications' %}
           {% if post.figure %}
-            <img style="width: 80%; margin: 0 auto;" src="{{ base_path }}{{ post.figure }}">
+            <div style="text-align:center"><img style="width: 90%" src="{{ base_path }}{{ post.figure }}"></div>
           {% endif %}
           {% if post.figurepdf %}
             <embed src="{{ base_path }}{{ post.figurepdf }}" style="height: 300px;" />
