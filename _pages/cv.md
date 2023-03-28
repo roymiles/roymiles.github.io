@@ -16,35 +16,30 @@ Education
 
 Work experience
 ======
-* Machine Learning Research Scientist Intern: 06/22 - 12/22
-  * **Samsung Research UK**
+* **Samsung Research UK** Machine Learning Research Scientist Intern: 06/22 - 12/22
   * Introduced a novel method for semi-supervised video object segmentation on mobile devices, using a
 unification of representation distillation and contrastive learning.
   * Achieved competitive performance despite running up to ×5 faster, and with ×32 fewer parameters.
   * This work has been accepted for presentation at CVPR 2023.
 
-* Software Engineer Intern: 06/17 - 09/17
-  * **Waymont Consulting**
+* **Waymont Consulting** Software Engineer Intern: 06/17 - 09/17
   * Developed a responsive web GUI with a C++ backend to automate tests for signal processing equipment.
   * Replaced previously manual testing system and increased efficiency by hundredfold.
 
-* Research Engineer Intern: 06/16 - 09/16
-  * **Toshiba Research Europe**
+* **Toshiba Research Europe** Research Engineer Intern: 06/16 - 09/16
   * Designed out-of-tree blocks in C++ using the GNURadio signal processing environment to characterise
   and linearise a communication channel between two USRP devices.
   * Conducted research on utilising the RC-5 Infrared (IR) remote control standard for short-range, low-cost, and low-data rate IoT applications
 
-* Research Engineer Intern: 06/15 - 09/15
-  * **Toshiba Research Europe**
+* **Toshiba Research Europe** Research Engineer Intern: 06/15 - 09/15
   * Developed a MATLAB GUI to operate a motor-driven positioner in conjunction with a Vector Network Analyzer for measuring antenna patterns within an anechoic chamber.
   * Modified existing VB.NET code to synchronize two X-Y positioners for analyzing propagation channels.
   
 Skills
 ======
-* Programming: C++, Python, CUDA, C#, VHDL, MATLAB, ...
-* Frameworks: Tensorflow, PyTorch, CuDNN, OpenCV, Vivado HLS, Qt, Django
-* Web Dev: Html, css, JavaScript, PHP, SQL, ...
-* Misc: Academic research, teaching, and LaTeX typesetting.
+* Programming: C++, Python, CUDA, C#, VHDL, MATLAB
+* Frameworks: PyTorch, Tensorflow, CuDNN, OpenCV, Vivado HLS, Qt, Django
+* Web Dev: HTML, CSS, JavaScript, Python, SQL
 
 Publications
 ======
