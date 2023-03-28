@@ -8,14 +8,4 @@ redirect_from:
   - /about.html
 ---
 
-This is just a simple personal website for hosting my CV. I may post some more interesting content in the near future!
-
-
-         _________________
-        (       Hey       )
-         -----------------
-                o   ^__^
-                 o  (oO)\_______
-                    (__)\       )\/\
-                     U  ||----w |
-                        ||     ||
+Hi! I am a PhD student in the [department of Electronic and Electrical engineering](https://www.imperial.ac.uk/electrical-engineering/) at Imperial College London under the supervision of [Professor Krystian Mikolajczyk](https://scholar.google.com/citations?user=s1IAWfgAAAAJ). My work is primarily on the topic of knowledge distillation and pruning for training small and efficient computer vision models. 
