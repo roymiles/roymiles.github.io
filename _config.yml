@@ -83,7 +83,7 @@ analytics:
 author:
   name             : "Roy Miles"
   avatar           : "profile.jpg"
-  bio              : "I am a fourth year Ph.D. candidate at Imperial College London. My research topic is on building efficient computer vision models for their deployment on resource constrained devices, such as mobile phones."
+  bio              : "I am currently a Research Scientist at Huawei Noah's Ark UK. My research has been primarily on the topic of building efficient computer vision models and deploying them on resource constrained devices, such as mobile phones."
   location         : "London, UK"
   employer         :
   pubmed           :
