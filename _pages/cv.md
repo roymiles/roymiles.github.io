@@ -12,10 +12,14 @@ redirect_from:
 Education
 ======
 * MEng in Electrical and Electronic Engineering, Bristol University, 1st Class Honours 78%, 2014-2018
-* Ph.D in Computer Vision, Imperial College London, 2018-2023 (expected)
+* Ph.D in Computer Vision, Imperial College London, 2018-2023
 
 Work experience
 ======
+* **Huawei Noah’s Ark Lab UK** Research Scientist: 06/23 - present
+  * Foundational research on knowledge distillation for vision-language models.
+  * Working with multi-modality models and LLMs.
+
 * **Samsung Research UK** Machine Learning Research Scientist Intern: 06/22 - 12/22
   * Introduced a novel method for semi-supervised video object segmentation on mobile devices, using a
 unification of representation distillation and contrastive learning.
