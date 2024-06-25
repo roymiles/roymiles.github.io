@@ -2418,7 +2418,7 @@ input[type="file"]:focus,input[type="radio"]:focus,input[type="checkbox"]:focus,
     box-shadow:0 0 10px rgba(0,0,0,0.25)
 }
 .archive__item:hover .archive__item-title{
-    text-decoration:underline
+    text-decoration:none
 }
 @media (min-width: 48em){
     .list__item{
