@@ -1,1 +1,0 @@
-This is the source code to Roy Miles's public academic website: https://roymiles.github.io/. This is copied from https://github.com/academicpages/academicpages.github.io but with the jekyll dependancies removed.
