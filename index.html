@@ -73,8 +73,10 @@
       text-align: center;
     }
     .profile-card .author__avatar img {
+      display: block;
       width: min(11rem, 46vw);
       max-width: 100%;
+      margin: 0 auto;
       border: 4px solid #fff;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
     }
@@ -85,24 +87,49 @@
     .profile-card .author__urls-wrapper {
       margin-top: 1rem;
     }
+    .profile-card .profile-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0;
+      color: #4b5563;
+      font-size: 0.95rem;
+    }
     .profile-card .social-icons {
       margin: 0;
       padding: 0;
       list-style: none;
-      display: grid;
-      gap: 0.65rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
     }
     .profile-card .social-icons li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.55rem;
-      line-height: 1.45;
+      margin: 0;
+    }
+    .profile-card .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+      color: #334155;
+      text-decoration: none;
+    }
+    .profile-card .social-icons a:hover {
+      color: #2563eb;
+      border-color: rgba(37, 99, 235, 0.28);
+      transform: translateY(-1px);
     }
     .profile-card .social-icons i {
-      width: 1rem;
-      margin-top: 0.2rem;
-      text-align: center;
-      flex: 0 0 auto;
+      width: auto;
+      margin: 0;
+      font-size: 1.05rem;
     }
     .profile-card .btn {
       display: none;
@@ -158,6 +185,10 @@
       .profile-card .author__content {
         text-align: left;
       }
+      .profile-card .profile-location,
+      .profile-card .social-icons {
+        justify-content: flex-start;
+      }
     }
     @media (max-width: 63.99rem) {
       .news-table,
@@ -198,6 +229,9 @@
     @media (max-width: 40rem) {
       :root {
         --nav-offset: 6rem;
+      }
+      .hero-banner {
+        display: none;
       }
       .page-shell {
         padding-inline: 0.875rem;
@@ -256,7 +290,7 @@
 </head>
 <body class="min-h-screen">
   <!-- Mountain banner across top -->
-  <div class="relative w-full h-40 overflow-hidden">
+  <div class="hero-banner relative w-full h-40 overflow-hidden">
     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
       <defs>
         <filter id="paperNoise">
@@ -310,14 +344,14 @@
 				  <p class="mt-3 text-sm text-gray-600 leading-relaxed">Research Scientist focused on efficient computer vision, knowledge distillation, and mobile AI.</p>
 			   </div>
 			   <div class="author__urls-wrapper">
-				  <ul class="mt-1 text-sm text-gray-600 social-icons">
-					 <li><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i><span>London, UK</span></li>
-					 <li><a href="https://www.researchgate.net/profile/Roy-Miles" class="hover:text-blue-700 transition-colors duration-200"><i class="fab fa-fw fa-researchgate" aria-hidden="true"></i> ResearchGate</a></li>
-					 <li><a href="https://twitter.com/miles12roy" class="hover:text-blue-700 transition-colors duration-200"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
-					 <li><a href="https://www.linkedin.com/in/roy-miles" class="hover:text-blue-700 transition-colors duration-200"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
-					 <li><a href="https://github.com/roymiles" class="hover:text-blue-700 transition-colors duration-200"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
-					 <li><a href="https://www.stackoverflow.com/users/1582331/roy" class="hover:text-blue-700 transition-colors duration-200"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow</a></li>
-					 <li><a href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ" class="hover:text-blue-700 transition-colors duration-200"><i class="fas fa-fw fa-graduation-cap" aria-hidden="true"></i> Google Scholar</a></li>
+				  <p class="profile-location"><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i><span>London, UK</span></p>
+				  <ul class="mt-4 social-icons">
+					 <li><a href="https://www.researchgate.net/profile/Roy-Miles" aria-label="ResearchGate" title="ResearchGate"><i class="fab fa-fw fa-researchgate" aria-hidden="true"></i><span class="visually-hidden">ResearchGate</span></a></li>
+					 <li><a href="https://twitter.com/miles12roy" aria-label="Twitter" title="Twitter"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a></li>
+					 <li><a href="https://www.linkedin.com/in/roy-miles" aria-label="LinkedIn" title="LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="visually-hidden">LinkedIn</span></a></li>
+					 <li><a href="https://github.com/roymiles" aria-label="GitHub" title="GitHub"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a></li>
+					 <li><a href="https://www.stackoverflow.com/users/1582331/roy" aria-label="Stack Overflow" title="Stack Overflow"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i><span class="visually-hidden">Stack Overflow</span></a></li>
+					 <li><a href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ" aria-label="Google Scholar" title="Google Scholar"><i class="fas fa-fw fa-graduation-cap" aria-hidden="true"></i><span class="visually-hidden">Google Scholar</span></a></li>
 				  </ul>
 			   </div>
 			</div>
