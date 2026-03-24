@@ -174,20 +174,72 @@
       min-height: 2.75rem;
     }
     @media (min-width: 64rem) {
+      .page-shell {
+        width: min(100%, 64rem);
+        padding-top: 1.75rem;
+      }
       .site-layout {
-        grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
-        gap: 2.5rem;
+        grid-template-columns: 12rem minmax(0, 1fr);
+        gap: 2.25rem;
       }
       .profile-rail {
         position: sticky;
         top: calc(var(--nav-offset) + 1rem);
       }
-      .profile-card .author__content {
+      .profile-card {
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0.5rem 0 0;
+      }
+      .profile-card .author__avatar {
         text-align: left;
+      }
+      .profile-card .author__avatar img {
+        width: 175px;
+        max-width: 175px;
+        margin: 0;
+        padding: 5px;
+        border: 1px solid #f2f3f3;
+        box-shadow: none;
+        background: transparent;
+      }
+      .profile-card .author__content {
+        margin-top: 0.85rem;
+        text-align: left;
+      }
+      .profile-card .author__urls-wrapper {
+        margin-top: 0.85rem;
+      }
+      .profile-card .profile-location {
+        justify-content: flex-start;
+        font-size: 0.85rem;
       }
       .profile-card .profile-location,
       .profile-card .social-icons {
         justify-content: flex-start;
+      }
+      .profile-card .social-icons {
+        gap: 0.55rem;
+      }
+      .profile-card .social-icons a {
+        width: auto;
+        height: auto;
+        padding: 0.1rem;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        color: #4b5563;
+      }
+      .profile-card .social-icons a:hover {
+        color: #2563eb;
+        border-color: transparent;
+        transform: none;
+      }
+      .page-main article.max-w-3xl {
+        box-shadow: none;
       }
     }
     @media (max-width: 63.99rem) {
@@ -229,9 +281,6 @@
     @media (max-width: 40rem) {
       :root {
         --nav-offset: 6rem;
-      }
-      .hero-banner {
-        display: none;
       }
       .page-shell {
         padding-inline: 0.875rem;
@@ -292,41 +341,6 @@
   <!-- end custom head snippets -->
 </head>
 <body class="min-h-screen">
-  <!-- Mountain banner across top -->
-  <div class="hero-banner relative w-full h-40 overflow-hidden">
-    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <filter id="paperNoise">
-          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" result="noise" />
-          <feColorMatrix type="saturate" values="0" />
-          <feComponentTransfer>
-            <feFuncA type="table" tableValues="0 0.06" />
-          </feComponentTransfer>
-        </filter>
-        <filter id="pencilShading" x="-20%" y="-20%" width="140%" height="140%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="turb" />
-          <feDiffuseLighting in="turb" lightingColor="#ffffff" surfaceScale="0.5">
-            <feDistantLight azimuth="45" elevation="60" />
-          </feDiffuseLighting>
-          <feColorMatrix type="matrix" values="0.6 0 0 0 0  0 0.6 0 0 0  0 0 0.6 0 0  0 0 0 1 0" />
-        </filter>
-        <radialGradient id="vignette" cx="50%" cy="20%" r="80%">
-          <stop offset="60%" stop-color="rgba(255,255,255,0.92)" />
-          <stop offset="100%" stop-color="rgba(240,240,240,0.9)" />
-        </radialGradient>
-      </defs>
-      <g transform="translate(0,120)">
-        <path d="M0,500 L160,320 L260,420 L380,260 L540,460 L760,200 L860,300 L980,180 L1200,500 L1200,800 L0,800 Z" fill="url(#vignette)" opacity="0.8" />
-        <path d="M0,500 L160,320 L260,420 L380,260 L540,460 L760,200 L860,300 L980,180 L1200,500" fill="none" stroke="#9b9b9b" stroke-width="2.6" />
-        <path d="M0,520 L140,340 L260,440 L400,280 L540,480 L760,220 L860,340 L1000,200 L1200,520" fill="none" stroke="#bdbdbd" stroke-width="1.2" />
-        <g filter="url(#pencilShading)" opacity="0.35">
-          <path d="M20,520 L160,360 L260,460 L400,300 L540,500 L760,260 L860,360 L1000,240 L1180,520 L1180,640 L20,640 Z" fill="#f3f3f3" />
-        </g>
-        <rect x="0" y="0" width="1200" height="800" fill="#ffffff" filter="url(#paperNoise)" />
-      </g>
-    </svg>
-  </div>
-
   <nav class="site-nav sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/90 shadow-sm">
     <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
       <ul class="site-nav__list flex justify-center p-4 text-sm font-medium">
