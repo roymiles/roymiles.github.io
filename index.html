@@ -178,14 +178,32 @@
       .news-table td {
         padding-top: 0.75rem;
         padding-bottom: 0.75rem;
-        border-bottom: 1px solid var(--border-subtle);
+      }
+      .news-table tr + tr th,
+      .news-table tr + tr td {
+        border-top: 1px solid rgba(15, 23, 42, 0.06);
       }
       .news-table th {
         padding-right: 1rem;
-        border-right: 1px solid var(--border-subtle);
       }
       .news-table td {
+        position: relative;
         padding-left: 1rem;
+      }
+      .news-table td::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.6rem;
+        bottom: 0.6rem;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          rgba(148, 163, 184, 0),
+          rgba(148, 163, 184, 0.35) 18%,
+          rgba(148, 163, 184, 0.35) 82%,
+          rgba(148, 163, 184, 0)
+        );
       }
       .page-shell {
         width: min(100%, 64rem);
