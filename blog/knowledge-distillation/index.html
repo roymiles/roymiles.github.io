@@ -795,50 +795,10 @@
 
   <p id="cross-task" class="subsection-start">
     <span class="inline-subsection">Cross-Task Feature Distillation:</span>
-    Most feature distillation assumes teacher and student are trained on the same task.
-    Cross-task distillation relaxes this: the teacher may be trained on image classification
-    while the student targets depth estimation, semantic segmentation, or another structured
-    output task. The feature spaces have different semantic content and there is no natural
-    layer correspondence.
+    Traditional distillation assumes teacher and student share the same task. Cross-task distillation removes this constraint—the teacher (e.g., classification) and student (e.g., segmentation or depth) operate on different objectives with no direct feature alignment.
   </p>
   <p>
-    Auty, Miles, Kolbeinsson and Mikolajczyk [<a href="#ref22">22</a>] address this by
-    learning a <span class="hi">cross-task projector</span> that maps teacher features into
-    the student's task space. The key finding is that deep features from a classification
-    teacher still encode general visual structure (edges, textures, object boundaries) that
-    transfers usefully across task objectives. Their method trains a lightweight adapter
-    jointly with the student using a task-conditioned feature loss, showing consistent
-    gains over training from scratch or single-task distillation. Importantly, the cross-task
-    projector does not need to be trained separately: it is learned end-to-end, and the
-    training signal from the target task regularises which directions of the teacher space
-    are actually useful for the student's objective.
-  </p>
-
-  <p id="info-theoretic" class="subsection-start">
-    <span class="inline-subsection">Information-Theoretic Feature Matching:</span>
-    The projector-based analysis of [<a href="#ref15">15</a>] shows that feature distillation
-    implicitly encodes relational structure, but does not directly optimise an information-theoretic
-    objective. Miles, Lopez Rodriguez and Mikolajczyk [<a href="#ref24">24</a>] take a more
-    principled route, framing feature distillation as maximising the mutual information
-    \(I(f_T;\, f_S)\) between teacher and student representations.
-  </p>
-  <p>
-    Under a Gaussian assumption, this leads to a closed-form lower bound that decomposes into
-    two terms: a <span class="hi">correlation term</span> that encourages student features to
-    co-vary with the teacher, and a <span class="hi">self-information term</span> that discourages
-    collapse of the student representation. The standard L2 feature loss can be recovered as a
-    special case, but the mutual information framing identifies when it under- or over-penalises
-    specific directions. In experiments, explicitly including the self-information regulariser
-    prevented representation collapse in settings where the student architecture had much lower
-    capacity than the teacher.
-  </p>
-  <p>
-    A closely related approach, PKT [<a href="#ref31">31</a>], models teacher representations
-    as a kernel density estimate and trains the student to match the resulting probability
-    distribution. This avoids any Gaussian assumption and can capture multi-modal structure
-    in the teacher's feature space, at the cost of needing a kernel bandwidth hyperparameter.
-    Both IKD and PKT support the broader view that the right way to measure feature alignment
-    depends on the geometry of the teacher's representation, not just its coordinate-wise values.
+    Auty, Miles, Kolbeinsson and Mikolajczyk [<a href="#ref22">22</a>] address this by learning a <span class="hi">cross-task projector</span> that maps teacher features into the student’s task space. Since classification features still capture general visual structure (edges, textures, boundaries), they remain useful across tasks. A lightweight adapter is trained end-to-end with the student using a task-aware feature loss, improving performance over training from scratch or standard distillation while letting the target task guide which teacher features matter.
   </p>
 
   <p id="dense-feat" class="subsection-start">
