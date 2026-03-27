@@ -303,11 +303,21 @@
         <ol style="margin-top:0.3rem;">
           <li><a href="#projector">The Projector (Adapter)</a></li>
           <li><a href="#hints">Hints and Attention Transfer</a></li>
+          <li><a href="#cross-task">Cross-Task Feature Distillation</a></li>
+          <li><a href="#info-theoretic">Information-Theoretic Feature Matching</a></li>
+          <li><a href="#dense-feat">Feature Distillation for Dense Prediction</a></li>
         </ol>
       </li>
       <li><a href="#relation-based">Relation-Based Distillation</a></li>
       <li><a href="#loss-functions">Loss Functions</a></li>
       <li><a href="#comparison">Method Comparison</a></li>
+      <li><a href="#applications">Applications and Practical Considerations</a>
+        <ol style="margin-top:0.3rem;">
+          <li><a href="#compression">Compression Synergies</a></li>
+          <li><a href="#mobile">Mobile and On-Device Deployment</a></li>
+          <li><a href="#self-distil">Self-Distillation Revisited</a></li>
+        </ol>
+      </li>
       <li><a href="#language-vs-vision">Language v.s. Vision</a>
         <ol style="margin-top:0.3rem;">
           <li><a href="#deit">Distillation Tokens (DeiT)</a></li>
@@ -479,6 +489,17 @@
     <li><span class="hi">Self-distillation</span> uses shallower sub-networks within the same model as the teacher,
         requiring no separate training run.</li>
     <li><span class="hi">Label smoothing</span> can be viewed as response distillation with a uniform teacher.</li>
+    <li><span class="hi">Decoupled Knowledge Distillation (DKD)</span> [<a href="#ref14">14</a>] decomposes the
+        KL divergence into target-class and non-target-class terms, showing that the non-target component
+        carries the bulk of the dark knowledge and can be weighted independently for better student accuracy.</li>
+    <li><span class="hi">Hierarchical self-distillation</span> [<a href="#ref25">25</a>] embeds response distillation
+        within a pruning pipeline: intermediate pruned checkpoints act as teachers for subsequent pruning stages,
+        creating a cascaded chain of teacher-student pairs without any external model. This allows distillation
+        to be used as an accuracy recovery mechanism inside structured compression.</li>
+    <li><span class="hi">Self-supervised augmentation (SSKD)</span> [<a href="#ref29">29</a>] enriches the teacher
+        signal by using self-supervised contrastive objectives as auxiliary heads; the student learns to match
+        both the teacher's classification output and its self-supervised representation simultaneously,
+        acting as implicit multi-task distillation.</li>
   </ul>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -755,6 +776,97 @@
     because attention maps are more architecture-agnostic than raw feature tensors.
   </p>
 
+  <p>
+    ReviewKD [<a href="#ref28">28</a>] pushes feature-based distillation further by introducing
+    <span class="hi">multi-level review connections</span>: each student layer receives distillation
+    signals from multiple teacher layers simultaneously rather than a single matched pair.
+    This hierarchical attention over teacher levels lets the student draw on both low-level
+    and high-level teacher representations, recovering information that a strict one-to-one
+    layer matching would discard.
+  </p>
+
+  <p>
+    A Comprehensive Overhaul of Feature Distillation [<a href="#ref30">30</a>] revisits
+    the activation boundary perspective, arguing that standard L2 feature matching penalises
+    directions where the teacher is inactive and the student is active, which creates
+    harmful gradient signals. Their margin ReLU formulation zeros these gradients out,
+    giving the student more freedom where the teacher's representation is sparse.
+  </p>
+
+  <p id="cross-task" class="subsection-start">
+    <span class="inline-subsection">Cross-Task Feature Distillation:</span>
+    Most feature distillation assumes teacher and student are trained on the same task.
+    Cross-task distillation relaxes this: the teacher may be trained on image classification
+    while the student targets depth estimation, semantic segmentation, or another structured
+    output task. The feature spaces have different semantic content and there is no natural
+    layer correspondence.
+  </p>
+  <p>
+    Auty, Miles, Kolbeinsson and Mikolajczyk [<a href="#ref22">22</a>] address this by
+    learning a <span class="hi">cross-task projector</span> that maps teacher features into
+    the student's task space. The key finding is that deep features from a classification
+    teacher still encode general visual structure (edges, textures, object boundaries) that
+    transfers usefully across task objectives. Their method trains a lightweight adapter
+    jointly with the student using a task-conditioned feature loss, showing consistent
+    gains over training from scratch or single-task distillation. Importantly, the cross-task
+    projector does not need to be trained separately: it is learned end-to-end, and the
+    training signal from the target task regularises which directions of the teacher space
+    are actually useful for the student's objective.
+  </p>
+
+  <p id="info-theoretic" class="subsection-start">
+    <span class="inline-subsection">Information-Theoretic Feature Matching:</span>
+    The projector-based analysis of [<a href="#ref15">15</a>] shows that feature distillation
+    implicitly encodes relational structure, but does not directly optimise an information-theoretic
+    objective. Miles, Lopez Rodriguez and Mikolajczyk [<a href="#ref24">24</a>] take a more
+    principled route, framing feature distillation as maximising the mutual information
+    \(I(f_T;\, f_S)\) between teacher and student representations.
+  </p>
+  <p>
+    Under a Gaussian assumption, this leads to a closed-form lower bound that decomposes into
+    two terms: a <span class="hi">correlation term</span> that encourages student features to
+    co-vary with the teacher, and a <span class="hi">self-information term</span> that discourages
+    collapse of the student representation. The standard L2 feature loss can be recovered as a
+    special case, but the mutual information framing identifies when it under- or over-penalises
+    specific directions. In experiments, explicitly including the self-information regulariser
+    prevented representation collapse in settings where the student architecture had much lower
+    capacity than the teacher.
+  </p>
+  <p>
+    A closely related approach, PKT [<a href="#ref31">31</a>], models teacher representations
+    as a kernel density estimate and trains the student to match the resulting probability
+    distribution. This avoids any Gaussian assumption and can capture multi-modal structure
+    in the teacher's feature space, at the cost of needing a kernel bandwidth hyperparameter.
+    Both IKD and PKT support the broader view that the right way to measure feature alignment
+    depends on the geometry of the teacher's representation, not just its coordinate-wise values.
+  </p>
+
+  <p id="dense-feat" class="subsection-start">
+    <span class="inline-subsection">Feature Distillation for Dense Prediction:</span>
+    Image-level distillation operates on a single global feature vector or small logit vector.
+    Dense prediction tasks (object detection, semantic segmentation, video object segmentation)
+    require distillation at <span class="hi">every spatial location or time step</span>, which
+    changes the scaling and alignment challenges considerably.
+  </p>
+  <p>
+    Miles, Yucel, Manganelli and Saa-Garriga [<a href="#ref23">23</a>] address video object
+    segmentation, where the student must track objects in real time on a mobile device.
+    MobileVOS combines a contrastive feature distillation objective with response-based soft
+    labels, using the teacher to define positive and negative pairs in the embedding space of
+    frame features. The temporal dimension introduces an additional challenge: the student must
+    learn which patches to match across frames, and a poorly distilled feature space leads to
+    object drift. Their experiments show that the combination of response and feature losses
+    is essential, and that either alone is insufficient for stable temporal tracking.
+  </p>
+  <p>
+    Miles and Mikolajczyk [<a href="#ref27">27</a>] combine feature distillation with
+    filter pruning in a different way. After a filter is removed from the teacher, cheap
+    spatial transformations are applied to the remaining filters to approximate the
+    pruned filter's response map. This acts as a form of targeted feature reconstruction:
+    rather than distilling the full feature volume, the method distils only the directions
+    that pruning has disrupted, making it highly efficient for structured compression pipelines.
+  </p>
+
   <!-- ═══════════════════════════════════════════════════════
        5. RELATION-BASED
   ════════════════════════════════════════════════════════ -->
@@ -834,7 +946,22 @@
         teacher and student embeddings of the same sample should be similar, while different samples should be far apart.</li>
     <li><span class="hi">NST</span> [<a href="#ref8">8</a>] matches the distribution of neuron activations using
         maximum mean discrepancy (MMD) rather than direct alignment.</li>
+    <li><span class="hi">PKT</span> [<a href="#ref31">31</a>] models the teacher's feature distribution as a kernel
+        density estimate and trains the student to match the resulting probability distribution, capturing
+        multi-modal structure in the embedding space without any Gaussian assumption.</li>
+    <li><span class="hi">SSKD</span> [<a href="#ref29">29</a>] adds self-supervised contrastive objectives as
+        auxiliary teacher heads, so the student simultaneously imitates the teacher's supervised predictions and
+        its self-supervised structure, acting as a form of multi-signal relation-based distillation.</li>
   </ul>
+
+  <p>
+    The projector analysis of [<a href="#ref15">15</a>] provides a theoretical bridge between relation-based
+    and feature-based methods. At its fixed point, the projector encodes the student-teacher cross-correlation
+    matrix \(C_{st} = Z_s^\top Z_t\), which is exactly the relational quantity that RKD and CRD try to
+    match explicitly. This explains why feature-based distillation with a learned projector can rival
+    explicit relation-based losses: the projector absorbs relational structure implicitly, without requiring
+    a separate batch-level objective or a large memory bank.
+  </p>
 
   <!-- ═══════════════════════════════════════════════════════
        6. LOSS FUNCTIONS
@@ -947,26 +1074,92 @@
   <div class="card table-scroll" style="margin-top:1.25rem;">
     <table class="comparison-table">
       <thead>
-        <tr><th>Paradigm</th><th>What is transferred</th><th>Architecture constraint</th><th>Key hyperparameter</th></tr>
+        <tr><th>Method</th><th>Paradigm</th><th>What is transferred</th><th>Architecture constraint</th><th>Key reference</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>Response-based</td>
-          <td>Soft output logits</td>
-          <td>None; only requires same number of classes</td>
-          <td>Temperature \(T\)</td>
+          <td>KD [<a href="#ref1">1</a>]</td>
+          <td>Response</td>
+          <td>Soft output logits (temperature \(T\))</td>
+          <td>Same output space</td>
+          <td>Hinton et al. 2015</td>
         </tr>
         <tr>
-          <td>Feature-based</td>
-          <td>Hidden layer tensors</td>
-          <td>Requires alignment via a projector</td>
-          <td>Layer selection, projector design</td>
+          <td>DKD [<a href="#ref14">14</a>]</td>
+          <td>Response</td>
+          <td>Decoupled target / non-target logits</td>
+          <td>Same output space</td>
+          <td>Zhao &amp; Cui 2022</td>
         </tr>
         <tr>
-          <td>Relation-based</td>
-          <td>Pairwise / batch structure</td>
-          <td>None; works across any architectures</td>
-          <td>Batch size, contrastive temperature \(\tau\)</td>
+          <td>FitNets [<a href="#ref4">4</a>]</td>
+          <td>Feature</td>
+          <td>Mid-network hint layers via projector</td>
+          <td>Projector aligns widths</td>
+          <td>Romero et al. 2015</td>
+        </tr>
+        <tr>
+          <td>AT [<a href="#ref5">5</a>]</td>
+          <td>Feature</td>
+          <td>Spatial attention maps (channel sum)</td>
+          <td>Matching spatial resolution</td>
+          <td>Zagoruyko &amp; Komodakis 2017</td>
+        </tr>
+        <tr>
+          <td>SRD [<a href="#ref15">15</a>]</td>
+          <td>Feature</td>
+          <td>Projected features; projector encodes relational structure</td>
+          <td>Projector handles width gap</td>
+          <td>Miles &amp; Mikolajczyk 2024</td>
+        </tr>
+        <tr>
+          <td>VkD [<a href="#ref19">19</a>]</td>
+          <td>Feature</td>
+          <td>Orthogonally projected features (Stiefel manifold)</td>
+          <td>Row-orthogonal projector</td>
+          <td>Miles et al. 2024</td>
+        </tr>
+        <tr>
+          <td>ReviewKD [<a href="#ref28">28</a>]</td>
+          <td>Feature</td>
+          <td>Multi-level teacher features via attention aggregation</td>
+          <td>Multi-layer alignment</td>
+          <td>Chen et al. 2021</td>
+        </tr>
+        <tr>
+          <td>LCKD [<a href="#ref22">22</a>]</td>
+          <td>Feature</td>
+          <td>Cross-task projected features</td>
+          <td>Cross-task projector</td>
+          <td>Auty, Miles et al. 2024</td>
+        </tr>
+        <tr>
+          <td>RKD [<a href="#ref6">6</a>]</td>
+          <td>Relation</td>
+          <td>Pairwise distances and angles</td>
+          <td>None</td>
+          <td>Park et al. 2019</td>
+        </tr>
+        <tr>
+          <td>CRD [<a href="#ref7">7</a>]</td>
+          <td>Relation</td>
+          <td>Contrastive cross-modal alignment</td>
+          <td>None; memory bank needed</td>
+          <td>Tian et al. 2020</td>
+        </tr>
+        <tr>
+          <td>IKD [<a href="#ref24">24</a>]</td>
+          <td>Feature + Relation</td>
+          <td>Mutual information \(I(f_T;\,f_S)\) lower bound</td>
+          <td>Projector for alignment</td>
+          <td>Miles et al. 2022</td>
+        </tr>
+        <tr>
+          <td>DeiT [<a href="#ref20">20</a>]</td>
+          <td>Response (via token)</td>
+          <td>Teacher logits via dedicated [DIST] attention token</td>
+          <td>ViT architecture</td>
+          <td>Touvron et al. 2021</td>
         </tr>
       </tbody>
     </table>
@@ -984,9 +1177,98 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
-       8. LANGUAGE MODELING VS VISION
+       8. APPLICATIONS AND PRACTICAL CONSIDERATIONS
   ════════════════════════════════════════════════════════ -->
-  <h2 id="language-vs-vision">8. Language v.s. Vision</h2>
+  <h2 id="applications">8. Applications and Practical Considerations</h2>
+
+  <p>
+    The three distillation families described above are not research artefacts; they are
+    routinely combined with other compression techniques and deployed in products where
+    latency, memory, and power budgets are hard constraints. This section covers the most
+    important practical settings.
+  </p>
+
+  <h3 id="compression">Compression Synergies</h3>
+
+  <p>
+    Pruning and distillation are complementary: pruning reduces the parameter count but
+    leaves gaps in the learned representation, while distillation provides a principled
+    way to recover accuracy. The order matters. <span class="hi">Distil-then-prune</span>
+    first compresses knowledge into a smaller model and then applies structured pruning,
+    which is natural when a pre-trained teacher is available. <span class="hi">Prune-then-distil</span>
+    prunes the teacher itself and then distils from the pruned version, which is useful
+    when the target architecture must match an existing hardware-optimised layout.
+  </p>
+  <p>
+    Miles and Mikolajczyk [<a href="#ref27">27</a>] interleave pruning and distillation at
+    the filter level: when a filter is removed, a cheap spatial transformation (a combination of
+    existing filters) reconstructs the response map of the removed filter. This is a targeted
+    feature distillation that operates inside the pruning loop itself rather than as a
+    post-hoc step, making it efficient for iterative compression schedules.
+  </p>
+  <p>
+    Low-rank decomposition is a related compression technique that replaces weight matrices
+    with products of smaller matrices. Miles, Reddy, Elezi and Deng [<a href="#ref26">26</a>]
+    show in VeLoRA that rank-1 sub-token projections can replace full attention heads during
+    training with negligible accuracy loss. Although VeLoRA targets training efficiency rather
+    than inference compression, the principle extends to distillation: a student whose
+    weights are parameterised with low-rank factors can be distilled from a full-rank teacher
+    while keeping the student's parameter count very small. The projector in feature distillation
+    can itself be parameterised in low-rank form, reducing distillation overhead during training
+    by an additional factor.
+  </p>
+
+  <h3 id="mobile">Mobile and On-Device Deployment</h3>
+
+  <p>
+    On-device deployment imposes constraints beyond model size: inference latency, peak
+    memory bandwidth, quantisation compatibility, and hardware-specific instruction sets
+    all affect which architectures and compression strategies are viable.
+    Miles and Mikolajczyk [<a href="#ref32">32</a>] study descriptor model compression
+    for mobile applications, showing that feature distillation from a full-precision
+    teacher into a quantisation-friendly student can close most of the accuracy gap
+    caused by quantisation, without requiring quantisation-aware training of the teacher.
+    Distillation effectively acts as a soft-label regulariser that smooths the loss
+    landscape around quantisation boundaries.
+  </p>
+  <p>
+    MobileVOS [<a href="#ref23">23</a>] demonstrates end-to-end distillation for a
+    real-time video object segmentation model running on mobile hardware at interactive
+    frame rates. The key engineering insight is that a contrastive feature loss needs
+    careful negative mining: for video, frames from the same scene but different time
+    steps provide harder negatives than random batch samples, and using them makes the
+    student's memory module more robust to appearance change. The student runs at
+    over 30 fps on a mobile GPU while matching the segmentation quality of models
+    that are 5 to 10 times larger.
+  </p>
+
+  <h3 id="self-distil">Self-Distillation Revisited</h3>
+
+  <p>
+    Self-distillation avoids the cost of training and storing a separate teacher by using
+    the model itself as its own teacher, either across training stages, across model depths,
+    or across augmentation views. The cascaded channel pruning approach of
+    [<a href="#ref25">25</a>] is one such example: each pruning stage produces a slightly
+    worse model that serves as the teacher for the next stage. This is analogous to
+    Born-Again Networks [<a href="#ref3">3</a>] but operates within a compression loop
+    rather than between independently trained networks.
+  </p>
+  <p>
+    A more recent form of self-distillation appears in large language model training.
+    DeepSeek-R1 [<a href="#ref21">21</a>] can be viewed as self-distillation at scale:
+    the same base model architecture, trained with GRPO, generates the reasoning traces
+    that then serve as supervision for smaller distilled variants. The traces encode the
+    model's own learned reasoning strategy, creating a curriculum where the student is
+    taught by a stronger version of itself. This is conceptually identical to Born-Again
+    Networks [<a href="#ref3">3</a>], but applied to open-ended reasoning rather than
+    fixed-output classification, and at a scale where the "teacher" and "student" differ
+    not just in size but in training objective.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       9. LANGUAGE MODELING VS VISION
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="language-vs-vision">9. Language v.s. Vision</h2>
 
   <p>
     Although the high-level taxonomy is shared, the practical form of distillation differs
@@ -1206,7 +1488,7 @@
   <!-- ═══════════════════════════════════════════════════════
        9. FUTURE DIRECTIONS
   ════════════════════════════════════════════════════════ -->
-  <h2 id="future-directions">9. Future Directions</h2>
+  <h2 id="future-directions">10. Future Directions</h2>
 
   <p>
     Knowledge distillation is an active area and several threads are shaping its frontier.
@@ -1270,9 +1552,9 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
-       10. REFERENCES
+       11. REFERENCES
   ════════════════════════════════════════════════════════ -->
-  <h2 id="references">10. References</h2>
+  <h2 id="references">11. References</h2>
 
   <div class="card" style="padding:1.25rem 1.5rem; margin-top:1.25rem;">
     <ul class="ref-list">
@@ -1297,6 +1579,17 @@
       <li id="ref19"><span class="ref-num">[19]</span><span>R. Miles, I. Elezi, J. Deng. <em>VkD: Improving Knowledge Distillation using Orthogonal Projections.</em> CVPR, 2024. <a href="https://arxiv.org/abs/2403.06213" target="_blank">arXiv:2403.06213</a></span></li>
       <li id="ref20"><span class="ref-num">[20]</span><span>H. Touvron et al. <em>Training data-efficient image transformers &amp; distillation through attention.</em> ICML, 2021. <a href="https://arxiv.org/abs/2012.12877" target="_blank">arXiv:2012.12877</a></span></li>
       <li id="ref21"><span class="ref-num">[21]</span><span>DeepSeek-AI. <em>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</em> 2025. <a href="https://arxiv.org/abs/2501.12948" target="_blank">arXiv:2501.12948</a></span></li>
+      <li id="ref22"><span class="ref-num">[22]</span><span>D. Auty*, R. Miles*, B. Kolbeinsson*, K. Mikolajczyk. <em>Learning to Project for Cross-Task Knowledge Distillation.</em> BMVC, 2024. <a href="https://arxiv.org/abs/2403.14494" target="_blank">arXiv:2403.14494</a></span></li>
+      <li id="ref23"><span class="ref-num">[23]</span><span>R. Miles, M. K. Yucel, B. Manganelli, A. Saa-Garriga. <em>MobileVOS: Real-Time Video Object Segmentation — Contrastive Learning Meets Knowledge Distillation.</em> CVPR, 2023. <a href="https://arxiv.org/abs/2303.07815" target="_blank">arXiv:2303.07815</a></span></li>
+      <li id="ref24"><span class="ref-num">[24]</span><span>R. Miles, A. Lopez Rodriguez, K. Mikolajczyk. <em>Information Theoretic Representation Distillation.</em> BMVC, 2022. <a href="https://arxiv.org/abs/2112.00459" target="_blank">arXiv:2112.00459</a></span></li>
+      <li id="ref25"><span class="ref-num">[25]</span><span>R. Miles, K. Mikolajczyk. <em>Cascaded Channel Pruning using Hierarchical Self-Distillation.</em> BMVC, 2020. <a href="https://arxiv.org/abs/2008.06814" target="_blank">arXiv:2008.06814</a></span></li>
+      <li id="ref26"><span class="ref-num">[26]</span><span>R. Miles, P. Reddy, I. Elezi, J. Deng. <em>VeLoRA: Memory Efficient Training using Rank-1 Sub-Token Projections.</em> NeurIPS, 2024. <a href="https://arxiv.org/abs/2405.17991" target="_blank">arXiv:2405.17991</a></span></li>
+      <li id="ref27"><span class="ref-num">[27]</span><span>R. Miles, K. Mikolajczyk. <em>Reconstructing Pruned Filters using Cheap Spatial Transformations.</em> ICCVW, 2023. <a href="https://arxiv.org/abs/2110.12844" target="_blank">arXiv:2110.12844</a></span></li>
+      <li id="ref28"><span class="ref-num">[28]</span><span>P. Chen et al. <em>Distilling Knowledge via Knowledge Review.</em> CVPR, 2021. <a href="https://arxiv.org/abs/2104.09044" target="_blank">arXiv:2104.09044</a></span></li>
+      <li id="ref29"><span class="ref-num">[29]</span><span>C. Xu et al. <em>Knowledge Distillation Meets Self-Supervision.</em> ECCV, 2020. <a href="https://arxiv.org/abs/2006.07114" target="_blank">arXiv:2006.07114</a></span></li>
+      <li id="ref30"><span class="ref-num">[30]</span><span>B. Heo et al. <em>A Comprehensive Overhaul of Feature Distillation.</em> ICCV, 2019. <a href="https://arxiv.org/abs/1904.01866" target="_blank">arXiv:1904.01866</a></span></li>
+      <li id="ref31"><span class="ref-num">[31]</span><span>N. Passalis, A. Tefas. <em>Learning Deep Representations with Probabilistic Knowledge Transfer.</em> ECCV, 2018. <a href="https://arxiv.org/abs/1803.10837" target="_blank">arXiv:1803.10837</a></span></li>
+      <li id="ref32"><span class="ref-num">[32]</span><span>R. Miles, K. Mikolajczyk. <em>Compression of Descriptor Models for Mobile Applications.</em> ICASSP, 2021. <a href="https://arxiv.org/abs/2001.03102" target="_blank">arXiv:2001.03102</a></span></li>
     </ul>
   </div>
 

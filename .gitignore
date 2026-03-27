@@ -1,2 +1,9 @@
 _site/
+blog/knowledge-distillation/kd_survey.tex
+blog/knowledge-distillation/kd_survey.pdf
+blog/knowledge-distillation/*.aux
+blog/knowledge-distillation/*.log
+blog/knowledge-distillation/*.out
+blog/knowledge-distillation/*.bbl
+blog/knowledge-distillation/*.blg
 
