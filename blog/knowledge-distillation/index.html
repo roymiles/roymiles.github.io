@@ -308,7 +308,13 @@
       <li><a href="#relation-based">Relation-Based Distillation</a></li>
       <li><a href="#loss-functions">Loss Functions</a></li>
       <li><a href="#comparison">Method Comparison</a></li>
-      <li><a href="#language-vs-vision">Language v.s. Vision</a></li>
+      <li><a href="#language-vs-vision">Language v.s. Vision</a>
+        <ol style="margin-top:0.3rem;">
+          <li><a href="#deit">Distillation Tokens (DeiT)</a></li>
+          <li><a href="#deepseek-r1">Reasoning Distillation (DeepSeek-R1)</a></li>
+        </ol>
+      </li>
+      <li><a href="#future-directions">Future Directions</a></li>
       <li><a href="#references">References</a></li>
     </ol>
   </nav>
@@ -1027,17 +1033,249 @@
     time to accelerate decoding while preserving the target model's output distribution.
   </p>
 
+  <p id="deit" class="subsection-start">
+    <span class="inline-subsection">Distillation Tokens (DeiT):</span>
+    DeiT (Data-efficient Image Transformers) [<a href="#ref20">20</a>] introduced a dedicated
+    <span class="hi">distillation token</span> to embed teacher supervision directly into the
+    transformer's attention mechanism. Rather than adding an external loss on top of the
+    classification objective, DeiT appends a learnable <code>[DIST]</code> token to the standard
+    sequence of patch embeddings and the class token <code>[CLS]</code>.
+  </p>
+  <p>
+    The <code>[DIST]</code> token is processed through all transformer layers alongside every patch
+    and the class token, interacting with them via self-attention at every depth.
+    At the output, its representation feeds a separate distillation head trained to match the
+    teacher's prediction, while <code>[CLS]</code> feeds the standard classification head:
+  </p>
+
+  $$\mathcal{L} = \tfrac{1}{2}\,\mathcal{L}_{\mathrm{CE}}(y,\,\hat{y}_{\mathrm{cls}}) + \tfrac{1}{2}\,\mathcal{L}_{\mathrm{KL}}(\hat{y}_{\mathrm{teacher}},\,\hat{y}_{\mathrm{dist}})$$
+
+  <p>
+    The teacher is typically a strong CNN (e.g. RegNet), providing either hard labels
+    (argmax) or soft probability distributions. Because <code>[DIST]</code> can attend differently
+    to all patches, it develops representations that reflect the teacher's inductive biases
+    (e.g. CNN-style local spatial features) rather than simply mimicking <code>[CLS]</code>.
+    At inference the two heads' predictions are averaged for optimal accuracy. DeiT is a
+    notable <span class="hi">response–representation hybrid</span>: the loss is response-based
+    (matching teacher outputs) but the mechanism operates at the internal representation level
+    by routing teacher signals through the full depth of the network's attention.
+  </p>
+
+  <div class="diagram-wrap">
+    <svg id="svg-deit" viewBox="0 0 820 315" width="100%" xmlns="http://www.w3.org/2000/svg"
+         style="max-height:345px;">
+      <defs>
+        <marker id="arr-dt"  markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+        </marker>
+        <marker id="arr-dt-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#16a34a"/>
+        </marker>
+        <marker id="arr-dt-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#d97706"/>
+        </marker>
+        <marker id="arr-dt-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#2563eb"/>
+        </marker>
+      </defs>
+
+      <!-- ── Token row (y=232-284) ── -->
+      <rect x="16"  y="232" width="58" height="52" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="45"  y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700" fill="#1e40af">P₁</text>
+      <text x="45"  y="274" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#3b82f6">patch</text>
+
+      <rect x="94"  y="232" width="58" height="52" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="123" y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700" fill="#1e40af">P₂</text>
+      <text x="123" y="274" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#3b82f6">patch</text>
+
+      <rect x="172" y="232" width="58" height="52" rx="7" fill="#dbeafe" stroke="#2563eb" stroke-width="1.4"/>
+      <text x="201" y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="14" font-weight="700" fill="#1e40af">P₃</text>
+      <text x="201" y="274" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#3b82f6">patch</text>
+
+      <text x="272" y="262" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="22" fill="#94a3b8">…</text>
+
+      <!-- [CLS] -->
+      <rect x="293" y="232" width="76" height="52" rx="7" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8"/>
+      <text x="331" y="256" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">[CLS]</text>
+      <text x="331" y="273" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#22c55e">class token</text>
+
+      <!-- [DIST] — highlighted amber, slightly taller to denote novelty -->
+      <rect x="387" y="224" width="86" height="68" rx="9" fill="#fff7ed" stroke="#d97706" stroke-width="2.4"/>
+      <text x="430" y="253" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#92400e">[DIST]</text>
+      <text x="430" y="270" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#d97706">distil token ★</text>
+
+      <!-- ── ViT Transformer block (y=148-208) ── -->
+      <rect x="10" y="148" width="490" height="62" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
+      <text x="255" y="174" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#0f172a">ViT Transformer — L layers of self-attention</text>
+      <text x="255" y="196" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#475569">patches, [CLS] and [DIST] all interact freely</text>
+
+      <!-- Arrows: tokens → ViT bottom (y=210) -->
+      <line x1="45"  y1="232" x2="45"  y2="212" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr-dt)"/>
+      <line x1="123" y1="232" x2="123" y2="212" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr-dt)"/>
+      <line x1="201" y1="232" x2="201" y2="212" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr-dt)"/>
+      <line x1="331" y1="232" x2="331" y2="212" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arr-dt-g)"/>
+      <line x1="430" y1="224" x2="430" y2="212" stroke="#d97706" stroke-width="2.0" marker-end="url(#arr-dt-a)"/>
+
+      <!-- ── Two output branches from ViT top (y=148) ── -->
+      <!-- CLS → Class Head (up-left) -->
+      <line x1="180" y1="148" x2="120" y2="92"  stroke="#16a34a" stroke-width="1.8" marker-end="url(#arr-dt-g)"/>
+      <rect x="18" y="22" width="185" height="62" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.8"/>
+      <text x="110" y="47"  text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">Class Head  [CLS]</text>
+      <text x="110" y="65"  text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#334155">CE loss vs ground truth</text>
+
+      <!-- DIST → Distil Head (up-right) -->
+      <line x1="380" y1="148" x2="430" y2="92"  stroke="#d97706" stroke-width="2.0" marker-end="url(#arr-dt-a)"/>
+      <rect x="330" y="22" width="185" height="62" rx="10" fill="#fff7ed" stroke="#d97706" stroke-width="2.0"/>
+      <text x="422" y="47"  text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#92400e">Distil Head  [DIST]</text>
+      <text x="422" y="65"  text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#334155">KL/CE loss vs teacher ŷ</text>
+
+      <!-- ── Teacher (frozen) ── -->
+      <g class="kd-node" data-tip="Frozen CNN teacher (e.g. RegNet)" data-href="#deit"
+         data-fill="#eff6ff" data-fill-hover="#dbeafe">
+        <rect x="576" y="130" width="224" height="115" rx="13" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="688" y="168" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Teacher ❄️</text>
+        <text x="688" y="186" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#3b82f6">(e.g. RegNet CNN)</text>
+        <rect x="600" y="198" width="176" height="8"  rx="3" fill="#bfdbfe" opacity=".8"/>
+        <rect x="620" y="212" width="136" height="8"  rx="3" fill="#93c5fd" opacity=".8"/>
+      </g>
+
+      <!-- Teacher → Distil Head (dashed) -->
+      <line x1="576" y1="168" x2="515" y2="60" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arr-dt-b)"/>
+      <text x="560" y="102" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#2563eb">teacher ŷ</text>
+
+      <!-- Input image box -->
+      <rect x="576" y="268" width="224" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
+      <text x="688" y="292" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" font-weight="600" fill="#475569">Input Image → patches</text>
+
+      <!-- Image → Teacher -->
+      <line x1="688" y1="268" x2="688" y2="245" stroke="#94a3b8" stroke-width="1.3" marker-end="url(#arr-dt)"/>
+
+      <!-- Image → patch tokens -->
+      <line x1="576" y1="288" x2="500" y2="288" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr-dt)"/>
+      <line x1="500" y1="288" x2="500" y2="260" stroke="#94a3b8" stroke-width="1.3" marker-end="url(#arr-dt)"/>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#dbeafe; border:1px solid #2563eb;"></div>Patch tokens</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#dcfce7; border:1px solid #16a34a;"></div>[CLS] token</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fff7ed; border:1px solid #d97706;"></div>[DIST] token ★</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe; border:1px solid #2563eb;"></div>Teacher ❄️</div>
+    </div>
+    <p class="diagram-caption">
+      Figure 4. DeiT's distillation token. A dedicated [DIST] token attends to all patch tokens and [CLS] at every layer.
+      Its output drives a distillation head aligned to the frozen CNN teacher's prediction; the [CLS] head handles the standard task loss.
+    </p>
+  </div>
+
+  <p id="deepseek-r1" class="subsection-start">
+    <span class="inline-subsection">Reasoning Distillation (DeepSeek-R1):</span>
+    DeepSeek-R1 [<a href="#ref21">21</a>] demonstrates one of the most striking recent applications of distillation:
+    the structured <span class="hi">reasoning behaviour</span> of a very large model can be transferred to models
+    orders of magnitude smaller via a remarkably simple recipe.
+  </p>
+  <p>
+    The R1 training pipeline uses group relative policy optimisation (GRPO) to train a
+    671B-parameter mixture-of-experts model to produce long chain-of-thought reasoning traces —
+    sequences that interleave exploration, self-correction, and answer consolidation.
+    These traces are then used as supervision: a smaller student (7B–70B parameters)
+    is fine-tuned on teacher-generated traces with standard cross-entropy,
+    requiring no reinforcement learning of its own.
+  </p>
+  <p>
+    This is qualitatively different from response distillation (matching logits) or feature
+    distillation (matching hidden states). What is transferred is not a probability distribution
+    but the teacher's <span class="hi">problem-solving process</span>. Distilled models significantly outperform
+    same-size counterparts trained without reasoning traces, suggesting the long structured sequences carry
+    an implicit curriculum: early steps provide simpler sub-problem supervision, later steps require
+    integrating prior reasoning.
+  </p>
+  <p>
+    DeepSeek-R1 also highlights a practical shift in where distillation bottlenecks arise for LLMs.
+    Unlike vision distillation, the challenge is not architecture mismatch or projector design —
+    it is <span class="hi">generating high-quality teacher traces</span> at scale and ensuring student
+    context windows are large enough to absorb them.
+  </p>
+
   <div class="callout indigo">
     <span class="hi">Takeaway.</span> Vision distillation benefits most from feature-level
     alignment of spatial maps with a simple projector. Language distillation benefits
     most from rich soft-label matching over large vocabularies, with feature alignment
-    requiring careful attention-head and layer-mapping strategies.
+    requiring careful attention-head and layer-mapping strategies. Transformer-specific
+    techniques like DeiT's distillation token embed teacher signals into the model's
+    attention mechanism, while large-scale reasoning distillation (DeepSeek-R1)
+    shows that process-level supervision can outperform point-wise output matching.
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
-       9. REFERENCES
+       9. FUTURE DIRECTIONS
   ════════════════════════════════════════════════════════ -->
-  <h2 id="references">9. References</h2>
+  <h2 id="future-directions">9. Future Directions</h2>
+
+  <p>
+    Knowledge distillation is an active area and several threads are shaping its frontier.
+  </p>
+
+  <p class="subsection-start">
+    <span class="inline-subsection">Process and reward distillation.</span>
+    Systems like DeepSeek-R1 [<a href="#ref21">21</a>] signal a shift from output-level
+    distillation toward <span class="hi">process-level supervision</span>: matching the teacher's
+    step-by-step reasoning rather than its final answer. A related thread distils verifier or
+    reward models from RLHF-trained teachers, useful when the reward signal is expensive to
+    compute at inference but cheap to generate offline.
+  </p>
+
+  <p class="subsection-start">
+    <span class="inline-subsection">Test-time compute distillation.</span>
+    Large models can be given additional test-time compute — generating many candidate solutions
+    and selecting the best — giving a stronger signal than a single forward pass. Distilling
+    this capability into a student that approximates expensive search in a single step collapses
+    the gap between slow-thinking and fast-inference models, and is closely related to
+    best-of-\(N\) sampling, diffusion stitching [<a href="#ref13">13</a>], and speculative decoding
+    [<a href="#ref18">18</a>].
+  </p>
+
+  <p class="subsection-start">
+    <span class="inline-subsection">Diffusion model distillation.</span>
+    Score-based and diffusion generative models require many denoising steps at inference.
+    Progressive distillation and consistency models compress a multi-step teacher into a student
+    that approximates the same mapping in far fewer steps, often just one or two. This is a
+    direct analogue of response distillation applied to generative processes: instead of matching
+    class probabilities, the student matches the teacher's denoised output at each step.
+  </p>
+
+  <p class="subsection-start">
+    <span class="inline-subsection">Multimodal distillation.</span>
+    Cross-modal knowledge transfer — e.g. distilling a vision-language model into a vision-only
+    or text-only student — is an emerging challenge. The alignment problem is especially
+    pronounced because modalities have fundamentally different structure and there is no
+    obvious token-level correspondence between image patches and text tokens.
+    Methods that distil shared embedding spaces or use captioning as an intermediate
+    supervision signal are early steps in this direction.
+  </p>
+
+  <p class="subsection-start">
+    <span class="inline-subsection">Architecture-aware distillation.</span>
+    As models become more heterogeneous — mixing attention layers, state-space models, and
+    mixture-of-experts blocks — the question of how to transfer knowledge across radically
+    different inductive biases is increasingly important. VkD [<a href="#ref19">19</a>] and the
+    orthogonal projector are one step in this direction, but robust cross-paradigm distillation
+    (e.g. from a transformer to an SSM) and distillation for sparse expert models remain
+    largely open research problems.
+  </p>
+
+  <div class="callout teal">
+    <span class="hi">Common thread.</span> Across all these directions, the core tension
+    remains the same as in classical KD: the teacher holds richer structure than any single
+    loss can capture. Progress comes from finding the right representation of that structure —
+    whether it is a soft-label distribution, an intermediate feature, a reasoning trace,
+    or a denoising trajectory — and a training signal that transfers it faithfully into
+    a more efficient student.
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       10. REFERENCES
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="references">10. References</h2>
 
   <div class="card" style="padding:1.25rem 1.5rem; margin-top:1.25rem;">
     <ul class="ref-list">
@@ -1060,6 +1298,8 @@
       <li id="ref17"><span class="ref-num">[17]</span><span>P. Wang et al. <em>SCOTT: Self-Consistent Chain-of-Thought Distillation.</em> ACL, 2023. <a href="https://aclanthology.org/2023.acl-long.304/" target="_blank">ACL Anthology</a></span></li>
       <li id="ref18"><span class="ref-num">[18]</span><span>Y. Leviathan, M. Kalman, Y. Matias. <em>Fast Inference from Transformers via Speculative Decoding.</em> ICML, 2023. <a href="https://arxiv.org/abs/2211.17192" target="_blank">arXiv:2211.17192</a></span></li>
       <li id="ref19"><span class="ref-num">[19]</span><span>R. Miles, I. Elezi, J. Deng. <em>VkD: Improving Knowledge Distillation using Orthogonal Projections.</em> CVPR, 2024. <a href="https://arxiv.org/abs/2403.06213" target="_blank">arXiv:2403.06213</a></span></li>
+      <li id="ref20"><span class="ref-num">[20]</span><span>H. Touvron et al. <em>Training data-efficient image transformers &amp; distillation through attention.</em> ICML, 2021. <a href="https://arxiv.org/abs/2012.12877" target="_blank">arXiv:2012.12877</a></span></li>
+      <li id="ref21"><span class="ref-num">[21]</span><span>DeepSeek-AI. <em>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</em> 2025. <a href="https://arxiv.org/abs/2501.12948" target="_blank">arXiv:2501.12948</a></span></li>
     </ul>
   </div>
 
