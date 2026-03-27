@@ -96,7 +96,7 @@
       margin: 1.9rem 0 0.45rem;
       color: #0f172a;
     }
-    p  { margin: 0 0 1.1rem; }
+    p  { margin: 0 0 1.35rem; }
     a  { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
     a:hover { color: var(--indigo); }
     code {
@@ -153,6 +153,8 @@
       color: var(--slate); margin-top: 0.75rem;
     }
     .inline-subsection { font-weight: 700; color: #0f172a; }
+    .subsection-start { margin-top: 1.9rem; }
+    h2#overview-diagram, h2#relation-based { margin-top: 5rem; }
 
     /* ── SVG nodes ───────────────────────────── */
     .kd-node { cursor: pointer; }
@@ -400,7 +402,6 @@
 
   <p>
     The \(T^2\) factor compensates for the smaller gradient magnitudes at high temperatures.
-    Common choices are \(T \in \{3, 5, 10\}\) and \(\alpha \in \{0.5, 0.9\}\).
   </p>
 
   <div class="callout amber">
@@ -409,7 +410,7 @@
     semantic structure for free, acting as implicit data augmentation.
   </div>
 
-  <p><span class="inline-subsection">Variants:</span> Common response-distillation variants include:</p>
+  <p class="subsection-start"><span class="inline-subsection">Variants:</span> Common response-distillation variants include:</p>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">Born-Again Networks (BAN)</span> [<a href="#ref3">3</a>] iteratively re-train a model of the
         same architecture using the previous generation as teacher; successive generations consistently improve.</li>
@@ -436,7 +437,7 @@
     This is solved by a lightweight <span class="hi">projector</span>.
   </p>
 
-  <p id="projector">
+  <p id="projector" class="subsection-start">
     <span class="inline-subsection">The Projector / Adapter:</span>
     A projector is a small module (often a single \(1{\times}1\) convolution or a
     two-layer MLP) that maps the student's feature tensor into the teacher's
@@ -464,7 +465,7 @@
     because it changes the optimisation geometry rather than merely fixing a width mismatch.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Why the projector helps:</span>
     Following Miles and Mikolajczyk [<a href="#ref15">15</a>], it is useful to write the feature loss
     in matrix form. Let \(Z_s \in \mathbb{R}^{B \times d_s}\) and \(Z_t \in \mathbb{R}^{B \times d_t}\)
@@ -499,7 +500,7 @@
     learnable encoder of cross-sample relational structure, not merely as a dimensionality bridge.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Cross-architecture distillation:</span>
     Cross-architecture KD is usually harder than same-family KD because the student and teacher do not just differ
     in width or depth, they often encode <span class="hi">different inductive biases</span>. A CNN teacher and a transformer
@@ -546,7 +547,7 @@
     but without explicitly storing large external memory structures.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Why normalisation matters:</span>
     Normalisation is often introduced as a simple way to keep gradients well-scaled, but [<a href="#ref15">15</a>]
     argues that it has a deeper role: it changes the fixed point that the projector converges toward. Setting the
@@ -670,7 +671,7 @@
     </p>
   </div>
 
-  <p id="hints">
+  <p id="hints" class="subsection-start">
     <span class="inline-subsection">FitNets and Attention Transfer:</span>
     <span class="hi">FitNets</span> [<a href="#ref4">4</a>] was among the first to show that aligning
     mid-network features outperforms pure response distillation, especially when the student
@@ -763,7 +764,7 @@
     </p>
   </div>
 
-  <p><span class="inline-subsection">Prominent Methods:</span> Some of the most widely used relation-based methods are:</p>
+  <p class="subsection-start"><span class="inline-subsection">Prominent Methods:</span> Some of the most widely used relation-based methods are:</p>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">RKD</span> [<a href="#ref6">6</a>] matches pairwise distance and angle
         relationships between example embeddings, transferring relational structure even across very different architectures.</li>
@@ -825,7 +826,7 @@
     </table>
   </div>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">L2 / MSE:</span>
     This is the cleanest feature-matching objective and is the starting point for the analysis in
     [<a href="#ref15">15</a>]. It penalises absolute coordinate-wise mismatch between \(Z_s W_p\) and \(Z_t\).
@@ -834,7 +835,7 @@
     some channels dominate the loss while others get effectively ignored.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Cosine-style alignment:</span>
     Cosine losses focus on direction rather than magnitude. This can be helpful when teacher and student norms are
     inconsistent or when only angular similarity matters. The trade-off is that cosine losses deliberately suppress
@@ -842,7 +843,7 @@
     they often stabilise training but are less directly tied to the projector-dynamics analysis above than the squared loss.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Why normalisation changes the loss:</span>
     A feature loss is never acting on "raw" features in isolation. It acts on whatever geometry the combination of
     \(W_p\) and the chosen normalisation creates. With no normalisation, the loss tends to chase high-variance directions.
@@ -852,7 +853,7 @@
     tasks, whereas whitening is especially appropriate for generative tasks because it softly encourages cross-feature diversity.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">LogSum / soft maximum:</span>
     The projector paper argues that plain L2 can become too rigid when the teacher-student capacity gap is large.
     If the student cannot realistically match every feature coordinate, forcing all errors to be treated equally can
@@ -868,7 +869,7 @@
     \(\alpha\) around 4-5 working well across several architecture pairs.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Relation-based losses:</span>
     Contrastive, Gram-matrix, and MMD-style objectives try to preserve geometry at the batch level rather than match
     features one-by-one. The projector paper's main argument is that some of this relational information can already
@@ -932,7 +933,7 @@
     or explicit reasoning traces.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Chain-of-thought distillation:</span>
     In language reasoning, the teacher signal increasingly includes intermediate rationales
     rather than only final answers. Sequence-level KD [<a href="#ref12">12</a>] already moved in this
@@ -942,7 +943,7 @@
     common in vision, where the supervision is usually tied to logits or hidden activations.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Feature distillation:</span>
     Feature distillation is less common in language than in vision. In vision, intermediate maps have
     a natural spatial structure and clear layer-wise correspondence, so projector-based matching is often
@@ -953,7 +954,7 @@
     feature maps in the vision sense.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Tokenizer mismatch:</span>
     When teacher and student use different tokenisers, token-level response distillation is not directly
     compatible. This is one of the most important practical issues in LLM distillation. Common workarounds
@@ -961,7 +962,7 @@
     or distilling from decoded reasoning traces instead of matching token probabilities one-to-one.
   </p>
 
-  <p>
+  <p class="subsection-start">
     <span class="inline-subsection">Speculative decoding:</span>
     Distillation is not the only way to use a stronger model. Speculative decoding
     [<a href="#ref18">18</a>] keeps a larger verifier model in the loop at test time while a smaller draft
