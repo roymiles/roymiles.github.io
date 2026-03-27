@@ -1099,10 +1099,10 @@
       <text x="331" y="256" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">[CLS]</text>
       <text x="331" y="273" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#22c55e">class token</text>
 
-      <!-- [DIST] — highlighted amber, slightly taller to denote novelty -->
-      <rect x="387" y="224" width="86" height="68" rx="9" fill="#fff7ed" stroke="#d97706" stroke-width="2.4"/>
-      <text x="430" y="253" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#92400e">[DIST]</text>
-      <text x="430" y="270" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#d97706">distil token ★</text>
+      <!-- [DIST] — same height as other tokens, amber border to denote novelty -->
+      <rect x="387" y="232" width="86" height="52" rx="7" fill="#fff7ed" stroke="#d97706" stroke-width="2.4"/>
+      <text x="430" y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#92400e">[DIST]</text>
+      <text x="430" y="273" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#d97706">distil token ★</text>
 
       <!-- ── ViT Transformer block (y=148-208) ── -->
       <rect x="10" y="148" width="490" height="62" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
@@ -1114,7 +1114,7 @@
       <line x1="123" y1="232" x2="123" y2="212" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr-dt)"/>
       <line x1="201" y1="232" x2="201" y2="212" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr-dt)"/>
       <line x1="331" y1="232" x2="331" y2="212" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arr-dt-g)"/>
-      <line x1="430" y1="224" x2="430" y2="212" stroke="#d97706" stroke-width="2.0" marker-end="url(#arr-dt-a)"/>
+      <line x1="430" y1="232" x2="430" y2="212" stroke="#d97706" stroke-width="2.0" marker-end="url(#arr-dt-a)"/>
 
       <!-- ── Two output branches from ViT top (y=148) ── -->
       <!-- CLS → Class Head (up-left) -->
@@ -1139,9 +1139,9 @@
         <rect x="620" y="212" width="136" height="8"  rx="3" fill="#93c5fd" opacity=".8"/>
       </g>
 
-      <!-- Teacher → Distil Head (arc over the top, clears the distil head box) -->
-      <path d="M 688,130 Q 600,-10 422,22" stroke="#2563eb" stroke-width="1.5" fill="none" marker-end="url(#arr-dt-b)"/>
-      <text x="660" y="55" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#2563eb">teacher ŷ</text>
+      <!-- Teacher → Distil Head (arc arriving at right edge, vertical midpoint, small gap) -->
+      <path d="M 688,130 Q 630,20 522,53" stroke="#2563eb" stroke-width="1.5" fill="none" marker-end="url(#arr-dt-b)"/>
+      <text x="652" y="30" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#2563eb">teacher ŷ</text>
 
       <!-- Input image box -->
       <rect x="576" y="268" width="224" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
