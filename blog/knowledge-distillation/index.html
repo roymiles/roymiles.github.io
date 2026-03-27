@@ -1188,9 +1188,8 @@
     important practical settings.
   </p>
 
-  <h3 id="compression">Compression Synergies</h3>
-
-  <p>
+  <p id="compression" class="subsection-start">
+    <span class="inline-subsection">Compression and Pruning:</span>
     Pruning and distillation are complementary: pruning reduces the parameter count but
     leaves gaps in the learned representation, while distillation provides a principled
     way to recover accuracy. The order matters. <span class="hi">Distil-then-prune</span>
@@ -1198,38 +1197,20 @@
     which is natural when a pre-trained teacher is available. <span class="hi">Prune-then-distil</span>
     prunes the teacher itself and then distils from the pruned version, which is useful
     when the target architecture must match an existing hardware-optimised layout.
-  </p>
-  <p>
-    Miles and Mikolajczyk [<a href="#ref27">27</a>] interleave pruning and distillation at
-    the filter level: when a filter is removed, a cheap spatial transformation (a combination of
-    existing filters) reconstructs the response map of the removed filter. This is a targeted
-    feature distillation that operates inside the pruning loop itself rather than as a
-    post-hoc step, making it efficient for iterative compression schedules.
-  </p>
-  <p>
-    Low-rank decomposition is a related compression technique that replaces weight matrices
-    with products of smaller matrices. Miles, Reddy, Elezi and Deng [<a href="#ref26">26</a>]
-    show in VeLoRA that rank-1 sub-token projections can replace full attention heads during
-    training with negligible accuracy loss. Although VeLoRA targets training efficiency rather
-    than inference compression, the principle extends to distillation: a student whose
-    weights are parameterised with low-rank factors can be distilled from a full-rank teacher
-    while keeping the student's parameter count very small. The projector in feature distillation
-    can itself be parameterised in low-rank form, reducing distillation overhead during training
-    by an additional factor.
+    The cascaded channel pruning approach of [<a href="#ref25">25</a>] integrates distillation
+    directly into the pruning loop: intermediate pruned checkpoints act as teachers for
+    subsequent pruning stages, providing a gradient signal that discourages collateral damage
+    to shared parameters without requiring any external teacher model.
   </p>
 
-  <h3 id="mobile">Mobile and On-Device Deployment</h3>
-
-  <p>
+  <p id="mobile" class="subsection-start">
+    <span class="inline-subsection">Mobile and On-Device Deployment:</span>
     On-device deployment imposes constraints beyond model size: inference latency, peak
     memory bandwidth, quantisation compatibility, and hardware-specific instruction sets
-    all affect which architectures and compression strategies are viable.
-    Miles and Mikolajczyk [<a href="#ref32">32</a>] study descriptor model compression
-    for mobile applications, showing that feature distillation from a full-precision
-    teacher into a quantisation-friendly student can close most of the accuracy gap
-    caused by quantisation, without requiring quantisation-aware training of the teacher.
-    Distillation effectively acts as a soft-label regulariser that smooths the loss
-    landscape around quantisation boundaries.
+    all affect which architectures and compression strategies are viable. Distillation is
+    particularly effective here because the student architecture can be chosen to match the
+    target hardware (e.g., favouring depthwise separable convolutions or operators with high
+    cache locality) while the teacher provides a richer training signal than labels alone.
   </p>
   <p>
     MobileVOS [<a href="#ref23">23</a>] demonstrates end-to-end distillation for a
@@ -1242,9 +1223,8 @@
     that are 5 to 10 times larger.
   </p>
 
-  <h3 id="self-distil">Self-Distillation Revisited</h3>
-
-  <p>
+  <p id="self-distil" class="subsection-start">
+    <span class="inline-subsection">Self-Distillation Revisited:</span>
     Self-distillation avoids the cost of training and storing a separate teacher by using
     the model itself as its own teacher, either across training stages, across model depths,
     or across augmentation views. The cascaded channel pruning approach of
