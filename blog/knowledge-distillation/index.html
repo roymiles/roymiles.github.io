@@ -818,14 +818,6 @@
     object drift. Their experiments show that the combination of response and feature losses
     is essential, and that either alone is insufficient for stable temporal tracking.
   </p>
-  <p>
-    Miles and Mikolajczyk [<a href="#ref27">27</a>] combine feature distillation with
-    filter pruning in a different way. After a filter is removed from the teacher, cheap
-    spatial transformations are applied to the remaining filters to approximate the
-    pruned filter's response map. This acts as a form of targeted feature reconstruction:
-    rather than distilling the full feature volume, the method distils only the directions
-    that pruning has disrupted, making it highly efficient for structured compression pipelines.
-  </p>
 
   <!-- ═══════════════════════════════════════════════════════
        5. RELATION-BASED
