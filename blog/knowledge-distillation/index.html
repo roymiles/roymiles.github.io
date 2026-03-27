@@ -193,6 +193,12 @@
     .ref-list li:last-child { border-bottom: none; }
     .ref-num { flex-shrink: 0; font-weight: 700; color: var(--blue); width: 1.75rem; text-align: right; }
 
+    /* ── scroll progress bar ─────────────────── */
+    #scroll-bar {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: var(--blue); z-index: 200; transition: width .08s linear;
+    }
+
     /* ── back to top ─────────────────────────── */
     .back-top {
       display: inline-flex; align-items: center; gap: 0.4rem;
@@ -257,6 +263,7 @@
 </head>
 <body>
 
+<div id="scroll-bar"></div>
 <div class="kd-tooltip" id="kd-tooltip"></div>
 
 <!-- ── nav ──────────────────────────────────────────────── -->
@@ -492,14 +499,6 @@
     <li><span class="hi">Decoupled Knowledge Distillation (DKD)</span> [<a href="#ref14">14</a>] decomposes the
         KL divergence into target-class and non-target-class terms, showing that the non-target component
         carries the bulk of the dark knowledge and can be weighted independently for better student accuracy.</li>
-    <li><span class="hi">Hierarchical self-distillation</span> [<a href="#ref25">25</a>] embeds response distillation
-        within a pruning pipeline: intermediate pruned checkpoints act as teachers for subsequent pruning stages,
-        creating a cascaded chain of teacher-student pairs without any external model. This allows distillation
-        to be used as an accuracy recovery mechanism inside structured compression.</li>
-    <li><span class="hi">Self-supervised augmentation (SSKD)</span> [<a href="#ref29">29</a>] enriches the teacher
-        signal by using self-supervised contrastive objectives as auxiliary heads; the student learns to match
-        both the teacher's classification output and its self-supervised representation simultaneously,
-        acting as implicit multi-task distillation.</li>
   </ul>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -617,19 +616,6 @@
     interface to connect transformer and CNN features, which keeps the bridge lightweight.
   </p>
 
-  <p>
-    The same paper also notes that when the projector is updated with learning rate \(\alpha_p\) and weight
-    decay \(\eta\),
-  </p>
-
-  $$W_p \leftarrow (1-\eta)W_p + \alpha_p \dot W_p,$$
-
-  <p>
-    so in the special case \(\eta = \alpha_p\), the projector behaves like a moving average of relational
-    features. That makes it conceptually close to momentum-encoder style mechanisms used in contrastive methods,
-    but without explicitly storing large external memory structures.
-  </p>
-
   <p class="subsection-start">
     <span class="inline-subsection">Why normalisation matters:</span>
     Normalisation is often introduced as a simple way to keep gradients well-scaled, but [<a href="#ref15">15</a>]
@@ -653,27 +639,9 @@
   </p>
 
   <p>
-    The empirical story in [<a href="#ref15">15</a>] matches this derivation. When they track the singular values of
-    the projector during training, the better-performing normalisation schemes shrink fewer singular values toward zero.
-    Shrinking a singular value to zero means collapsing some direction of the student representation, which throws away
-    information before the distillation loss can exploit it. In their experiments, batch normalisation was the most
-    consistently effective choice, while weaker or no normalisation led to more projector collapse and worse accuracy.
-  </p>
-
-  <p>
-    A useful extension from VkD [<a href="#ref19">19</a>] is that the <span class="hi">right normalisation depends on the task</span>.
-    For discriminative problems, simple standardisation often improves optimisation by making the distillation loss less sensitive
-    to nuisance variation. For generative problems, whitening can be a better inductive bias. The reason is not just numerical
-    conditioning: if the teacher features satisfy \(Z_t^\top Z_t = I\), then the L2 feature loss can be rewritten to yield a lower bound
-    of the form \(\mathcal{L}_{\mathrm{distill}} \geq \mathrm{const} - \lambda \sum_{i \neq j} C_{j,i}^2\), where \(C\) measures
-    cross-feature distances between student and teacher coordinates. Minimising the loss therefore also pushes up the off-diagonal
-    cross-feature terms, which implicitly encourages decorrelated and therefore more <span class="hi">diverse features</span>.
-  </p>
-
-  <p>
-    This is why whitening makes particular sense for generative KD. Instead of adding a separate diversity loss that may fight the
-    distillation objective, whitening bakes that pressure into the representation geometry itself. In the VkD experiments, this was
-    especially valuable in data-limited image generation, where whitening helped avoid mode collapse and improved both realism and diversity.
+    The empirical story in [<a href="#ref15">15</a>] matches this derivation: better-performing normalisation schemes
+    shrink fewer singular values of the projector toward zero, preserving more informative directions for the student.
+    Batch normalisation is the most consistently effective choice across architecture pairs.
   </p>
 
   <div class="callout teal">
@@ -795,28 +763,16 @@
 
   <p id="cross-task" class="subsection-start">
     <span class="inline-subsection">Cross-Task Feature Distillation:</span>
-    Traditional distillation assumes teacher and student share the same task. Cross-task distillation removes this constraint—the teacher (e.g., classification) and student (e.g., segmentation or depth) operate on different objectives with no direct feature alignment.
-  </p>
-  <p>
-    Auty, Miles, Kolbeinsson and Mikolajczyk [<a href="#ref22">22</a>] address this by learning a <span class="hi">cross-task projector</span> that maps teacher features into the student’s task space. Since classification features still capture general visual structure (edges, textures, boundaries), they remain useful across tasks. A lightweight adapter is trained end-to-end with the student using a task-aware feature loss, improving performance over training from scratch or standard distillation while letting the target task guide which teacher features matter.
+    Standard distillation assumes the teacher and student share the same task. Cross-task variants relax this, using a learned projector to transfer classification features into a different task space (e.g., segmentation or depth), exploiting the general visual structure captured by the teacher [<a href="#ref22">22</a>].
   </p>
 
   <p id="dense-feat" class="subsection-start">
     <span class="inline-subsection">Feature Distillation for Dense Prediction:</span>
-    Image-level distillation operates on a single global feature vector or small logit vector.
-    Dense prediction tasks (object detection, semantic segmentation, video object segmentation)
-    require distillation at <span class="hi">every spatial location or time step</span>, which
-    changes the scaling and alignment challenges considerably.
-  </p>
-  <p>
-    Miles, Yucel, Manganelli and Saa-Garriga [<a href="#ref23">23</a>] address video object
-    segmentation, where the student must track objects in real time on a mobile device.
-    MobileVOS combines a contrastive feature distillation objective with response-based soft
-    labels, using the teacher to define positive and negative pairs in the embedding space of
-    frame features. The temporal dimension introduces an additional challenge: the student must
-    learn which patches to match across frames, and a poorly distilled feature space leads to
-    object drift. Their experiments show that the combination of response and feature losses
-    is essential, and that either alone is insufficient for stable temporal tracking.
+    Dense tasks (detection, segmentation, video tracking) require distillation at
+    <span class="hi">every spatial location</span> rather than a single global vector.
+    Combining contrastive feature losses with response-based soft labels is a common strategy,
+    with the teacher defining positive/negative pairs in the embedding space of local or
+    frame-level features [<a href="#ref23">23</a>].
   </p>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -1079,13 +1035,6 @@
           <td>Chen et al. 2021</td>
         </tr>
         <tr>
-          <td>LCKD [<a href="#ref22">22</a>]</td>
-          <td>Feature</td>
-          <td>Cross-task projected features</td>
-          <td>Cross-task projector</td>
-          <td>Auty, Miles et al. 2024</td>
-        </tr>
-        <tr>
           <td>RKD [<a href="#ref6">6</a>]</td>
           <td>Relation</td>
           <td>Pairwise distances and angles</td>
@@ -1098,13 +1047,6 @@
           <td>Contrastive cross-modal alignment</td>
           <td>None; memory bank needed</td>
           <td>Tian et al. 2020</td>
-        </tr>
-        <tr>
-          <td>IKD [<a href="#ref24">24</a>]</td>
-          <td>Feature + Relation</td>
-          <td>Mutual information \(I(f_T;\,f_S)\) lower bound</td>
-          <td>Projector for alignment</td>
-          <td>Miles et al. 2022</td>
         </tr>
         <tr>
           <td>DeiT [<a href="#ref20">20</a>]</td>
@@ -1464,6 +1406,12 @@
 </main>
 
 <script>
+  const scrollBar = document.getElementById('scroll-bar');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    scrollBar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  }, { passive: true });
+
   const tooltip = document.getElementById('kd-tooltip');
 
   document.querySelectorAll('.kd-node').forEach(node => {
