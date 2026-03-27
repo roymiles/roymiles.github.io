@@ -83,11 +83,12 @@
     h2 {
       font-family: var(--font);
       font-size: 1.7rem; font-weight: 800;
-      margin: 3.5rem 0 1.1rem; padding-bottom: 0.2em;
+      margin: 4.25rem 0 1.1rem; padding-bottom: 0.2em;
       color: #0f172a;
       border-bottom: 2px solid #e2e8f0;
       letter-spacing: -0.02em;
     }
+    h2:first-of-type { margin-top: 3.25rem; }
     h3 {
       font-family: var(--font);
       font-size: 1rem;
@@ -115,7 +116,7 @@
       font-size: 0.78rem; font-weight: 600;
       padding: 0.15rem 0.75rem; margin-right: 0.4rem;
     }
-    h2[id], h3[id] { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
+    h2[id], h3[id], p[id] { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
 
     /* ── cards / callouts ────────────────────── */
     .card {
@@ -247,9 +248,9 @@
         </ol>
       </li>
       <li><a href="#relation-based">Relation-Based Distillation</a></li>
-      <li><a href="#language-vs-vision">Language v.s. Vision</a></li>
       <li><a href="#loss-functions">Loss Functions</a></li>
       <li><a href="#comparison">Method Comparison</a></li>
+      <li><a href="#language-vs-vision">Language v.s. Vision</a></li>
       <li><a href="#references">References</a></li>
     </ol>
   </nav>
@@ -408,7 +409,7 @@
     semantic structure for free, acting as implicit data augmentation.
   </div>
 
-  <h3>Variants:</h3>
+  <p><span class="inline-subsection">Variants:</span> Common response-distillation variants include:</p>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">Born-Again Networks (BAN)</span> [<a href="#ref3">3</a>] iteratively re-train a model of the
         same architecture using the previous generation as teacher; successive generations consistently improve.</li>
@@ -435,9 +436,8 @@
     This is solved by a lightweight <span class="hi">projector</span>.
   </p>
 
-  <h3 id="projector">The Projector / Adapter:</h3>
-
-  <p>
+  <p id="projector">
+    <span class="inline-subsection">The Projector / Adapter:</span>
     A projector is a small module (often a single \(1{\times}1\) convolution or a
     two-layer MLP) that maps the student's feature tensor into the teacher's
     dimensionality so a direct comparison can be made:
@@ -464,9 +464,8 @@
     because it changes the optimisation geometry rather than merely fixing a width mismatch.
   </p>
 
-  <h3>Why the projector helps:</h3>
-
   <p>
+    <span class="inline-subsection">Why the projector helps:</span>
     Following Miles and Mikolajczyk [<a href="#ref15">15</a>], it is useful to write the feature loss
     in matrix form. Let \(Z_s \in \mathbb{R}^{B \times d_s}\) and \(Z_t \in \mathbb{R}^{B \times d_t}\)
     be the student and teacher representations over a batch, and let \(W_p \in \mathbb{R}^{d_s \times d_t}\)
@@ -501,6 +500,40 @@
   </p>
 
   <p>
+    <span class="inline-subsection">Cross-architecture distillation:</span>
+    Cross-architecture KD is usually harder than same-family KD because the student and teacher do not just differ
+    in width or depth, they often encode <span class="hi">different inductive biases</span>. A CNN teacher and a transformer
+    student, for example, organise information very differently. This is exactly the setting where an over-expressive
+    projector can become a problem: it may learn the architecture bridge itself, while the student backbone learns much less.
+  </p>
+
+  <p>
+    VkD [<a href="#ref19">19</a>] makes this idea explicit. Their goal is to preserve the structural information in the student
+    features while still aligning them to the teacher. They define an intra-batch kernel
+    \(K_{ij} = k(Z^i_s, Z^j_s)\), and for kernels that can be expanded as
+    \(k(Z^i_s, Z^j_s) = \sum_{n=0}^{\infty} a_n \langle Z^i_s, Z^j_s \rangle^n\), preserving the kernel reduces to
+    preserving inner products. For a linear projection \(P\), that means enforcing
+    \(\langle Z^i_s, Z^j_s \rangle = \langle Z^i_s P, Z^j_s P \rangle\), which in turn gives the orthogonality-style constraint
+    \(P P^\top = I\) for the row-orthogonal case.
+  </p>
+
+  <p>
+    The practical consequence is important. If the singular values of \(P\) are all one, the projector is not free to squash,
+    stretch, or collapse some directions just to make the loss smaller. More of the burden of matching the teacher is pushed
+    back into the student backbone itself, which is why the paper describes the orthogonal projector as
+    <span class="hi">maximising the amount of knowledge distilled into the backbone</span>. When \(d_s \neq d_t\), they implement this
+    through a row-orthogonal projection on the Stiefel manifold rather than an unconstrained linear layer.
+  </p>
+
+  <p>
+    This is especially useful in cross-architecture transfer. VkD [<a href="#ref19">19</a>] reports strong results in harder CNN
+    \(\leftrightarrow\) transformer settings, and argues that the gain comes partly from a softer transfer of inductive bias.
+    In their analysis, a CNN teacher can pass translational equivariance to a transformer student more effectively when the
+    projection preserves structure instead of inventing a new feature space of its own. They also use a simple pooled patch-token
+    interface to connect transformer and CNN features, which keeps the bridge lightweight.
+  </p>
+
+  <p>
     The same paper also notes that when the projector is updated with learning rate \(\alpha_p\) and weight
     decay \(\eta\),
   </p>
@@ -513,9 +546,8 @@
     but without explicitly storing large external memory structures.
   </p>
 
-  <h3>Why normalisation matters:</h3>
-
   <p>
+    <span class="inline-subsection">Why normalisation matters:</span>
     Normalisation is often introduced as a simple way to keep gradients well-scaled, but [<a href="#ref15">15</a>]
     argues that it has a deeper role: it changes the fixed point that the projector converges toward. Setting the
     stationary condition \(\dot W_p = 0\) gives
@@ -542,6 +574,22 @@
     Shrinking a singular value to zero means collapsing some direction of the student representation, which throws away
     information before the distillation loss can exploit it. In their experiments, batch normalisation was the most
     consistently effective choice, while weaker or no normalisation led to more projector collapse and worse accuracy.
+  </p>
+
+  <p>
+    A useful extension from VkD [<a href="#ref19">19</a>] is that the <span class="hi">right normalisation depends on the task</span>.
+    For discriminative problems, simple standardisation often improves optimisation by making the distillation loss less sensitive
+    to nuisance variation. For generative problems, whitening can be a better inductive bias. The reason is not just numerical
+    conditioning: if the teacher features satisfy \(Z_t^\top Z_t = I\), then the L2 feature loss can be rewritten to yield a lower bound
+    of the form \(\mathcal{L}_{\mathrm{distill}} \geq \mathrm{const} - \lambda \sum_{i \neq j} C_{j,i}^2\), where \(C\) measures
+    cross-feature distances between student and teacher coordinates. Minimising the loss therefore also pushes up the off-diagonal
+    cross-feature terms, which implicitly encourages decorrelated and therefore more <span class="hi">diverse features</span>.
+  </p>
+
+  <p>
+    This is why whitening makes particular sense for generative KD. Instead of adding a separate diversity loss that may fight the
+    distillation objective, whitening bakes that pressure into the representation geometry itself. In the VkD experiments, this was
+    especially valuable in data-limited image generation, where whitening helped avoid mode collapse and improved both realism and diversity.
   </p>
 
   <div class="callout teal">
@@ -622,9 +670,8 @@
     </p>
   </div>
 
-  <h3 id="hints">FitNets and Attention Transfer:</h3>
-
-  <p>
+  <p id="hints">
+    <span class="inline-subsection">FitNets and Attention Transfer:</span>
     <span class="hi">FitNets</span> [<a href="#ref4">4</a>] was among the first to show that aligning
     mid-network features outperforms pure response distillation, especially when the student
     is much thinner than the teacher. They introduce a two-stage training procedure: first
@@ -716,7 +763,7 @@
     </p>
   </div>
 
-  <h3>Prominent Methods:</h3>
+  <p><span class="inline-subsection">Prominent Methods:</span> Some of the most widely used relation-based methods are:</p>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">RKD</span> [<a href="#ref6">6</a>] matches pairwise distance and angle
         relationships between example embeddings, transferring relational structure even across very different architectures.</li>
@@ -727,66 +774,9 @@
   </ul>
 
   <!-- ═══════════════════════════════════════════════════════
-       6. LANGUAGE MODELING VS VISION
+       6. LOSS FUNCTIONS
   ════════════════════════════════════════════════════════ -->
-  <h2 id="language-vs-vision">6. Language v.s. Vision</h2>
-
-  <p>
-    Although the high-level taxonomy is shared, the practical form of distillation differs
-    a lot between vision and language. Vision usually distils logits or spatial features.
-    Language models often distil distributions over large vocabularies, generated sequences,
-    or explicit reasoning traces.
-  </p>
-
-  <p>
-    <span class="inline-subsection">Chain-of-thought distillation:</span>
-    In language reasoning, the teacher signal increasingly includes intermediate rationales
-    rather than only final answers. Sequence-level KD [<a href="#ref12">12</a>] already moved in this
-    direction by training on teacher-generated outputs, and later work such as Distilling Step-by-Step
-    [<a href="#ref16">16</a>] and SCOTT [<a href="#ref17">17</a>] showed that smaller students can benefit
-    directly from teacher reasoning traces. This kind of free-form rationale transfer is much less
-    common in vision, where the supervision is usually tied to logits or hidden activations.
-  </p>
-
-  <p>
-    <span class="inline-subsection">Feature distillation:</span>
-    Feature distillation is less common in language than in vision. In vision, intermediate maps have
-    a natural spatial structure and clear layer-wise correspondence, so projector-based matching is often
-    straightforward. In language models, hidden states are sequence-valued, lengths vary across examples,
-    and token positions or attention heads do not line up as cleanly. Methods such as TinyBERT
-    [<a href="#ref11">11</a>] and MiniLM [<a href="#ref10">10</a>] do distil internal representations, but
-    they typically transfer attention distributions or selected hidden-state statistics rather than raw
-    feature maps in the vision sense.
-  </p>
-
-  <p>
-    <span class="inline-subsection">Tokenizer mismatch:</span>
-    When teacher and student use different tokenisers, token-level response distillation is not directly
-    compatible. This is one of the most important practical issues in LLM distillation. Common workarounds
-    include learning a <span class="hi">vocabulary projection</span>, aligning at the sentence-embedding level,
-    or distilling from decoded reasoning traces instead of matching token probabilities one-to-one.
-  </p>
-
-  <p>
-    <span class="inline-subsection">Speculative decoding:</span>
-    Distillation is not the only way to use a stronger model. Speculative decoding
-    [<a href="#ref18">18</a>] keeps a larger verifier model in the loop at test time while a smaller draft
-    model proposes tokens. This is a different trade-off from classic distillation: instead of compressing
-    the teacher fully into the student during training, it leverages the stronger model directly at inference
-    time to accelerate decoding while preserving the target model's output distribution.
-  </p>
-
-  <div class="callout indigo">
-    <span class="hi">Takeaway.</span> Vision distillation benefits most from feature-level
-    alignment of spatial maps with a simple projector. Language distillation benefits
-    most from rich soft-label matching over large vocabularies, with feature alignment
-    requiring careful attention-head and layer-mapping strategies.
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       7. LOSS FUNCTIONS
-  ════════════════════════════════════════════════════════ -->
-  <h2 id="loss-functions">7. Loss Functions</h2>
+  <h2 id="loss-functions">6. Loss Functions</h2>
 
   <p>
     Most distillation recipes combine multiple objectives. The total training loss is
@@ -858,6 +848,8 @@
     \(W_p\) and the chosen normalisation creates. With no normalisation, the loss tends to chase high-variance directions.
     With stronger decorrelation, the projector can encode cross-feature relationships more faithfully. This is why
     [<a href="#ref15">15</a>] treats the projector and normalisation as a coupled system rather than two independent design choices.
+    VkD [<a href="#ref19">19</a>] pushes this further by arguing that standardisation is often the better default for discriminative
+    tasks, whereas whitening is especially appropriate for generative tasks because it softly encourages cross-feature diversity.
   </p>
 
   <p>
@@ -887,7 +879,7 @@
   <!-- ═══════════════════════════════════════════════════════
        8. COMPARISON
   ════════════════════════════════════════════════════════ -->
-  <h2 id="comparison">8. Method Comparison</h2>
+  <h2 id="comparison">7. Method Comparison</h2>
 
   <div class="card" style="overflow-x:auto; margin-top:1.25rem;">
     <table class="comparison-table">
@@ -922,7 +914,67 @@
     absolute improvement but requires the most engineering. Combining all three families in a
     carefully tuned multi-objective loss is the approach used by current state-of-the-art methods
     such as DKD [<a href="#ref14">14</a>] and the projector recipe of Miles and
-    Mikolajczyk [<a href="#ref15">15</a>].
+    Mikolajczyk [<a href="#ref15">15</a>]. At the same time, recent projector analyses suggest that
+    very complex relational objectives may not always be necessary: a learned projector can already
+    encode suitable relational structure, so in some settings a simple pairwise feature loss can go
+    surprisingly far without adding an explicit relation loss [<a href="#ref15">15</a>, <a href="#ref19">19</a>].
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       8. LANGUAGE MODELING VS VISION
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="language-vs-vision">8. Language v.s. Vision</h2>
+
+  <p>
+    Although the high-level taxonomy is shared, the practical form of distillation differs
+    a lot between vision and language. Vision usually distils logits or spatial features.
+    Language models often distil distributions over large vocabularies, generated sequences,
+    or explicit reasoning traces.
+  </p>
+
+  <p>
+    <span class="inline-subsection">Chain-of-thought distillation:</span>
+    In language reasoning, the teacher signal increasingly includes intermediate rationales
+    rather than only final answers. Sequence-level KD [<a href="#ref12">12</a>] already moved in this
+    direction by training on teacher-generated outputs, and later work such as Distilling Step-by-Step
+    [<a href="#ref16">16</a>] and SCOTT [<a href="#ref17">17</a>] showed that smaller students can benefit
+    directly from teacher reasoning traces. This kind of free-form rationale transfer is much less
+    common in vision, where the supervision is usually tied to logits or hidden activations.
+  </p>
+
+  <p>
+    <span class="inline-subsection">Feature distillation:</span>
+    Feature distillation is less common in language than in vision. In vision, intermediate maps have
+    a natural spatial structure and clear layer-wise correspondence, so projector-based matching is often
+    straightforward. In language models, hidden states are sequence-valued, lengths vary across examples,
+    and token positions or attention heads do not line up as cleanly. Methods such as TinyBERT
+    [<a href="#ref11">11</a>] and MiniLM [<a href="#ref10">10</a>] do distil internal representations, but
+    they typically transfer attention distributions or selected hidden-state statistics rather than raw
+    feature maps in the vision sense.
+  </p>
+
+  <p>
+    <span class="inline-subsection">Tokenizer mismatch:</span>
+    When teacher and student use different tokenisers, token-level response distillation is not directly
+    compatible. This is one of the most important practical issues in LLM distillation. Common workarounds
+    include learning a <span class="hi">vocabulary projection</span>, aligning at the sentence-embedding level,
+    or distilling from decoded reasoning traces instead of matching token probabilities one-to-one.
+  </p>
+
+  <p>
+    <span class="inline-subsection">Speculative decoding:</span>
+    Distillation is not the only way to use a stronger model. Speculative decoding
+    [<a href="#ref18">18</a>] keeps a larger verifier model in the loop at test time while a smaller draft
+    model proposes tokens. This is a different trade-off from classic distillation: instead of compressing
+    the teacher fully into the student during training, it leverages the stronger model directly at inference
+    time to accelerate decoding while preserving the target model's output distribution.
+  </p>
+
+  <div class="callout indigo">
+    <span class="hi">Takeaway.</span> Vision distillation benefits most from feature-level
+    alignment of spatial maps with a simple projector. Language distillation benefits
+    most from rich soft-label matching over large vocabularies, with feature alignment
+    requiring careful attention-head and layer-mapping strategies.
   </div>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -950,6 +1002,7 @@
       <li id="ref16"><span class="ref-num">[16]</span><span>C.-Y. Hsieh et al. <em>Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes.</em> Findings of ACL, 2023. <a href="https://arxiv.org/abs/2305.02301" target="_blank">arXiv:2305.02301</a></span></li>
       <li id="ref17"><span class="ref-num">[17]</span><span>P. Wang et al. <em>SCOTT: Self-Consistent Chain-of-Thought Distillation.</em> ACL, 2023. <a href="https://aclanthology.org/2023.acl-long.304/" target="_blank">ACL Anthology</a></span></li>
       <li id="ref18"><span class="ref-num">[18]</span><span>Y. Leviathan, M. Kalman, Y. Matias. <em>Fast Inference from Transformers via Speculative Decoding.</em> ICML, 2023. <a href="https://arxiv.org/abs/2211.17192" target="_blank">arXiv:2211.17192</a></span></li>
+      <li id="ref19"><span class="ref-num">[19]</span><span>R. Miles, I. Elezi, J. Deng. <em>VkD: Improving Knowledge Distillation using Orthogonal Projections.</em> CVPR, 2024. <a href="https://arxiv.org/abs/2403.06213" target="_blank">arXiv:2403.06213</a></span></li>
     </ul>
   </div>
 
