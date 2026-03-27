@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Knowledge Distillation — Roy Miles</title>
+  <title>Knowledge Distillation | Roy Miles</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A visual guide to knowledge distillation: response-based, feature-based, and relation-based methods, with a look at language vs vision.">
   <link rel="canonical" href="https://roymiles.github.io/blog/knowledge-distillation/">
@@ -802,7 +802,7 @@
       <text x="390" y="194" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10.5" fill="#64748b">distances, angles, and batch structure</text>
 
       <!-- Student cloud -->
-      <g class="kd-node" data-tip="Student embeddings — structure aligned to teacher" data-href="#relation-based"
+      <g class="kd-node" data-tip="Student embeddings: structure aligned to teacher" data-href="#relation-based"
          data-fill="#f0fdf4" data-fill-hover="#dcfce7">
         <ellipse cx="620" cy="155" rx="128" ry="104" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
         <text x="620" y="92" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">Student Embeddings</text>
@@ -1106,7 +1106,7 @@
 
       <!-- ── ViT Transformer block (y=148-208) ── -->
       <rect x="10" y="148" width="490" height="62" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
-      <text x="255" y="174" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#0f172a">ViT Transformer — L layers of self-attention</text>
+      <text x="255" y="174" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#0f172a">ViT Transformer (L layers of self-attention)</text>
       <text x="255" y="196" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#475569">patches, [CLS] and [DIST] all interact freely</text>
 
       <!-- Arrows: tokens → ViT bottom (y=210) -->
@@ -1141,7 +1141,7 @@
 
       <!-- Teacher → Distil Head (arc arriving at right edge, vertical midpoint, small gap) -->
       <path d="M 688,130 Q 630,20 522,53" stroke="#2563eb" stroke-width="1.5" fill="none" marker-end="url(#arr-dt-b)"/>
-      <text x="652" y="30" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#2563eb">teacher ŷ</text>
+      <text x="652" y="50" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10" fill="#2563eb">teacher ŷ</text>
 
       <!-- Input image box -->
       <rect x="576" y="268" width="224" height="40" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.3"/>
@@ -1172,7 +1172,7 @@
   </p>
   <p>
     The R1 training pipeline uses group relative policy optimisation (GRPO) to train a
-    671B-parameter mixture-of-experts model to produce long chain-of-thought reasoning traces —
+    671B-parameter mixture-of-experts model to produce long chain-of-thought reasoning traces:
     sequences that interleave exploration, self-correction, and answer consolidation.
     These traces are then used as supervision: a smaller student (7B–70B parameters)
     is fine-tuned on teacher-generated traces with standard cross-entropy,
@@ -1188,7 +1188,7 @@
   </p>
   <p>
     DeepSeek-R1 also highlights a practical shift in where distillation bottlenecks arise for LLMs.
-    Unlike vision distillation, the challenge is not architecture mismatch or projector design —
+    Unlike vision distillation, the challenge is not architecture mismatch or projector design;
     it is <span class="hi">generating high-quality teacher traces</span> at scale and ensuring student
     context windows are large enough to absorb them.
   </p>
@@ -1223,8 +1223,8 @@
 
   <p class="subsection-start">
     <span class="inline-subsection">Test-time compute distillation.</span>
-    Large models can be given additional test-time compute — generating many candidate solutions
-    and selecting the best — giving a stronger signal than a single forward pass. Distilling
+    Large models can be given additional test-time compute, generating many candidate solutions
+    and selecting the best, giving a stronger signal than a single forward pass. Distilling
     this capability into a student that approximates expensive search in a single step collapses
     the gap between slow-thinking and fast-inference models, and is closely related to
     best-of-\(N\) sampling, diffusion stitching [<a href="#ref13">13</a>], and speculative decoding
@@ -1242,8 +1242,8 @@
 
   <p class="subsection-start">
     <span class="inline-subsection">Multimodal distillation.</span>
-    Cross-modal knowledge transfer — e.g. distilling a vision-language model into a vision-only
-    or text-only student — is an emerging challenge. The alignment problem is especially
+    Cross-modal knowledge transfer (e.g. distilling a vision-language model into a vision-only
+    or text-only student) is an emerging challenge. The alignment problem is especially
     pronounced because modalities have fundamentally different structure and there is no
     obvious token-level correspondence between image patches and text tokens.
     Methods that distil shared embedding spaces or use captioning as an intermediate
@@ -1252,8 +1252,8 @@
 
   <p class="subsection-start">
     <span class="inline-subsection">Architecture-aware distillation.</span>
-    As models become more heterogeneous — mixing attention layers, state-space models, and
-    mixture-of-experts blocks — the question of how to transfer knowledge across radically
+    As models become more heterogeneous, mixing attention layers, state-space models, and
+    mixture-of-experts blocks, the question of how to transfer knowledge across radically
     different inductive biases is increasingly important. VkD [<a href="#ref19">19</a>] and the
     orthogonal projector are one step in this direction, but robust cross-paradigm distillation
     (e.g. from a transformer to an SSM) and distillation for sparse expert models remain
@@ -1263,9 +1263,9 @@
   <div class="callout teal">
     <span class="hi">Common thread.</span> Across all these directions, the core tension
     remains the same as in classical KD: the teacher holds richer structure than any single
-    loss can capture. Progress comes from finding the right representation of that structure —
+    loss can capture. Progress comes from finding the right representation of that structure:
     whether it is a soft-label distribution, an intermediate feature, a reasoning trace,
-    or a denoising trajectory — and a training signal that transfers it faithfully into
+    or a denoising trajectory, and a training signal that transfers it faithfully into
     a more efficient student.
   </div>
 
