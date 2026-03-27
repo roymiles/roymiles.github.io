@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Knowledge Distillation — Roy Miles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual guide to knowledge distillation: response-based, feature-based, and relation-based methods.">
+  <link rel="canonical" href="https://roymiles.github.io/blog/knowledge-distillation/">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue:    #2563eb;
+      --indigo:  #4f46e5;
+      --teal:    #0d9488;
+      --amber:   #d97706;
+      --rose:    #e11d48;
+      --slate:   #475569;
+      --bg:      #f8fafc;
+      --surface: #ffffff;
+      --border:  rgba(15,23,42,0.08);
+      --shadow:  0 14px 40px rgba(15,23,42,0.08);
+      --nav-h:   4rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+      font-size: 17px;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: #1e293b;
+      margin: 0;
+      line-height: 1.75;
+    }
+
+    /* ── nav ─────────────────────────────────── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--nav-h);
+      background: rgba(248,250,252,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 1.5rem;
+    }
+    .site-nav a {
+      text-decoration: none;
+      color: var(--slate);
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color .15s;
+    }
+    .site-nav a:hover { color: var(--blue); }
+    .site-nav .home-link {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+    .nav-sep { color: #cbd5e1; }
+
+    /* ── page shell ──────────────────────────── */
+    .page-shell {
+      width: min(100%, 60rem);
+      margin: 0 auto;
+      padding: 3rem 1.25rem 6rem;
+    }
+
+    /* ── typography ──────────────────────────── */
+    h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.5rem; font-weight: 700; margin: 3rem 0 1rem; padding-top: 0.25rem; color: #0f172a; }
+    h3 { font-size: 1.15rem; font-weight: 600; margin: 2rem 0 0.6rem; color: #1e293b; }
+    p  { margin: 0 0 1.1rem; }
+    a  { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { color: var(--indigo); }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82em;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 0.1em 0.4em;
+    }
+
+    .meta {
+      color: var(--slate);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+    .tag {
+      display: inline-block;
+      background: #eff6ff;
+      color: var(--blue);
+      border: 1px solid #bfdbfe;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.15rem 0.75rem;
+      margin-right: 0.4rem;
+    }
+
+    /* ── section anchors ─────────────────────── */
+    .section-anchor {
+      display: block;
+      position: relative;
+    }
+    h2[id], h3[id] { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
+
+    /* ── cards ───────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.75rem 2rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+    }
+    .callout {
+      background: #eff6ff;
+      border-left: 4px solid var(--blue);
+      border-radius: 0 0.75rem 0.75rem 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+    .callout.amber {
+      background: #fffbeb;
+      border-color: var(--amber);
+    }
+    .callout.teal {
+      background: #f0fdfa;
+      border-color: var(--teal);
+    }
+
+    /* ── toc ─────────────────────────────────── */
+    .toc {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 3rem;
+      font-size: 0.9rem;
+    }
+    .toc h4 { font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--slate); margin: 0 0 0.75rem; }
+    .toc ol { margin: 0; padding-left: 1.25rem; }
+    .toc li { margin: 0.3rem 0; }
+    .toc a { text-decoration: none; color: var(--slate); }
+    .toc a:hover { color: var(--blue); text-decoration: underline; }
+
+    /* ── equation box ────────────────────────── */
+    .eq {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 1rem 1.5rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      color: #1e293b;
+    }
+
+    /* ── diagram container ───────────────────── */
+    .diagram-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+    .diagram-caption {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--slate);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    /* ── SVG interactive nodes ───────────────── */
+    .kd-node {
+      cursor: pointer;
+      transition: filter .2s;
+    }
+    .kd-node:hover { filter: brightness(1.08) drop-shadow(0 3px 8px rgba(0,0,0,0.18)); }
+    .kd-node:active { filter: brightness(0.96); }
+    .kd-node rect, .kd-node ellipse {
+      transition: stroke-width .15s;
+    }
+    .kd-node:hover rect, .kd-node:hover ellipse {
+      stroke-width: 2.5 !important;
+    }
+    .kd-tooltip {
+      position: fixed;
+      background: #0f172a;
+      color: #f1f5f9;
+      font-size: 0.78rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .15s;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    /* ── pill legend ─────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin: 0.75rem 0 0;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--slate);
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── math (simple CSS) ───────────────────── */
+    .math { font-style: italic; }
+
+    /* ── responsive table ────────────────────── */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .comparison-table td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: top;
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+
+    /* ── back to top ─────────────────────────── */
+    .back-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--slate);
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      padding: 0.35rem 0.9rem;
+      transition: all .15s;
+    }
+    .back-top:hover { color: var(--blue); border-color: #bfdbfe; background: #eff6ff; }
+
+    @media (max-width: 640px) {
+      .card { padding: 1.25rem; }
+      .diagram-wrap { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── tooltip ──────────────────────────────────────────── -->
+<div class="kd-tooltip" id="kd-tooltip"></div>
+
+<!-- ── nav ──────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <a href="/" class="home-link">Roy Miles</a>
+  <span class="nav-sep">/</span>
+  <a href="/blog/">Blog</a>
+  <span class="nav-sep">/</span>
+  <span style="color:#0f172a; font-weight:500; font-size:0.875rem;">Knowledge Distillation</span>
+</nav>
+
+<!-- ── page ─────────────────────────────────────────────── -->
+<main class="page-shell">
+
+  <div class="meta">
+    <span class="tag">Tutorial</span>
+    <span class="tag">Knowledge Distillation</span>
+    <span class="tag">Model Compression</span>
+    <span style="margin-left:0.25rem;">March 2026 &mdash; Roy Miles</span>
+  </div>
+
+  <h1>Knowledge Distillation: A Visual Guide</h1>
+  <p style="font-size:1.1rem; color:#475569; margin-bottom:2rem; max-width:50rem;">
+    Knowledge distillation transfers the rich representations learned by a large
+    <em>teacher</em> network into a compact <em>student</em> model&thinsp;&mdash;&thinsp;enabling
+    deployment-friendly models without starting from scratch. This guide walks through
+    the three major distillation paradigms, each with an interactive diagram.
+  </p>
+
+  <!-- ── TOC ─────────────────────────────────────────────── -->
+  <nav class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#overview">Overview &amp; the Teacher–Student Framework</a></li>
+      <li><a href="#overview-diagram">Interactive Overview Diagram</a></li>
+      <li><a href="#response-based">Response-Based Distillation</a></li>
+      <li><a href="#feature-based">Feature-Based Distillation</a>
+        <ol style="margin-top:0.3rem;">
+          <li><a href="#projector">The Projector (Adapter)</a></li>
+          <li><a href="#feature-diagram">Interactive Feature Distillation Diagram</a></li>
+          <li><a href="#hints">Hints &amp; Attention Transfer</a></li>
+        </ol>
+      </li>
+      <li><a href="#relation-based">Relation-Based Distillation</a></li>
+      <li><a href="#loss-functions">Loss Functions</a></li>
+      <li><a href="#comparison">Method Comparison</a></li>
+    </ol>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       1. OVERVIEW
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="overview">1. Overview &mdash; the Teacher&ndash;Student Framework</h2>
+
+  <p>
+    The core idea, introduced by <a href="https://arxiv.org/abs/1503.02531" target="_blank">Hinton et al. (2015)</a>,
+    is elegantly simple: rather than training a small model purely on hard one-hot labels,
+    we also train it to mimic the <em>soft outputs</em> of a large, pre-trained teacher.
+    Soft outputs carry far more information than a binary correct/incorrect signal&mdash;a
+    teacher that assigns 0.6 probability to &ldquo;cat&rdquo; and 0.35 to &ldquo;lynx&rdquo;
+    is revealing something about visual similarity that a ground-truth label never could.
+  </p>
+
+  <div class="callout">
+    <strong>Key insight:</strong> Knowledge is not just <em>what</em> the teacher predicts,
+    but <em>how confident</em> it is across all classes, <em>which intermediate features</em>
+    it builds, and <em>how those features relate</em> to each other.
+  </div>
+
+  <p>
+    Modern surveys (e.g. <a href="https://arxiv.org/abs/2303.11098" target="_blank">Wang &amp; Yoon, 2023</a>)
+    organise distillation methods into three families based on <em>what</em> knowledge is
+    transferred:
+  </p>
+  <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
+    <li><strong>Response-based</strong> &mdash; match the teacher&rsquo;s final output layer.</li>
+    <li><strong>Feature-based</strong> &mdash; match internal representations at one or more hidden layers.</li>
+    <li><strong>Relation-based</strong> &mdash; match the <em>relationships</em> between samples or layers.</li>
+  </ul>
+  <p>
+    All three can be combined, and each adds a different inductive bias to the student.
+    The diagram below gives a high-level picture; <strong>click any block</strong> to jump
+    to its detailed section.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       OVERVIEW DIAGRAM
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="overview-diagram">2. Interactive Overview Diagram</h2>
+
+  <div class="diagram-wrap">
+    <svg id="svg-overview" viewBox="0 0 800 360" width="100%" xmlns="http://www.w3.org/2000/svg"
+         aria-label="Knowledge distillation overview diagram" role="img" style="max-height:400px;">
+
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+        </marker>
+        <marker id="arr-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#2563eb"/>
+        </marker>
+        <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="130%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+        </filter>
+      </defs>
+
+      <!-- Teacher box -->
+      <g class="kd-node" data-tip="The large pre-trained teacher network" data-href="#overview" aria-label="Teacher Network">
+        <rect x="30" y="120" width="160" height="120" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8" filter="url(#card-shadow)"/>
+        <text x="110" y="168" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Teacher</text>
+        <text x="110" y="188" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#3b82f6">Large / Pre-trained</text>
+        <!-- stacked lines suggesting a network -->
+        <rect x="55"  y="202" width="110" height="6"  rx="3" fill="#bfdbfe" opacity=".7"/>
+        <rect x="65"  y="213" width="90"  height="6"  rx="3" fill="#93c5fd" opacity=".7"/>
+        <rect x="75"  y="224" width="70"  height="6"  rx="3" fill="#60a5fa" opacity=".7"/>
+      </g>
+
+      <!-- Student box -->
+      <g class="kd-node" data-tip="The compact student network being trained" data-href="#overview" aria-label="Student Network">
+        <rect x="610" y="120" width="160" height="120" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" filter="url(#card-shadow)"/>
+        <text x="690" y="168" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#15803d">Student</text>
+        <text x="690" y="188" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#22c55e">Compact / Efficient</text>
+        <rect x="635" y="202" width="110" height="6"  rx="3" fill="#bbf7d0" opacity=".7"/>
+        <rect x="645" y="213" width="90"  height="6"  rx="3" fill="#86efac" opacity=".7"/>
+        <rect x="655" y="224" width="70"  height="6"  rx="3" fill="#4ade80" opacity=".7"/>
+      </g>
+
+      <!-- Arrow: Teacher → channels -->
+      <line x1="190" y1="180" x2="265" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="190" y1="180" x2="265" y2="100" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="190" y1="180" x2="265" y2="265" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Arrow: channels → Student -->
+      <line x1="535" y1="180" x2="608" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="535" y1="100" x2="608" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="535" y1="265" x2="608" y2="180" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+      <!-- Response-based node -->
+      <g class="kd-node" data-tip="Click to learn about response-based distillation" data-href="#response-based" aria-label="Response-based distillation">
+        <rect x="270" y="60" width="260" height="80" rx="12" fill="#fff7ed" stroke="#d97706" stroke-width="1.8" filter="url(#card-shadow)"/>
+        <text x="400" y="96" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#92400e">Response-Based</text>
+        <text x="400" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#b45309">Soft logits · KL divergence</text>
+      </g>
+
+      <!-- Feature-based node -->
+      <g class="kd-node" data-tip="Click to learn about feature-based distillation" data-href="#feature-based" aria-label="Feature-based distillation">
+        <rect x="270" y="140" width="260" height="80" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2.2" filter="url(#card-shadow)"/>
+        <text x="400" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Feature-Based</text>
+        <text x="400" y="196" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#3b82f6">Hidden layers · Projector · L2 / cosine</text>
+      </g>
+
+      <!-- Relation-based node -->
+      <g class="kd-node" data-tip="Click to learn about relation-based distillation" data-href="#relation-based" aria-label="Relation-based distillation">
+        <rect x="270" y="220" width="260" height="80" rx="12" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.8" filter="url(#card-shadow)"/>
+        <text x="400" y="256" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#6b21a8">Relation-Based</text>
+        <text x="400" y="276" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#a855f7">Sample/layer graphs · Contrastive</text>
+      </g>
+
+      <!-- Ground truth label (bottom) -->
+      <g>
+        <rect x="610" y="270" width="160" height="52" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.4"/>
+        <text x="690" y="298" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#475569">Ground-Truth Labels</text>
+        <text x="690" y="313" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#94a3b8">Task loss (CE)</text>
+      </g>
+      <line x1="690" y1="270" x2="690" y2="242" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Response-based</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>Feature-based</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#9333ea"></div>Relation-based</div>
+    </div>
+    <p class="diagram-caption">
+      Figure 1 — The three families of knowledge distillation. <strong>Click any coloured block</strong> to jump to that section.
+    </p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       3. RESPONSE-BASED
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="response-based">3. Response-Based Distillation</h2>
+
+  <p>
+    Response-based distillation is the original formulation from Hinton et al.
+    The <strong>teacher&rsquo;s output logits</strong> (pre-softmax scores) are used as
+    soft targets for the student. A temperature hyperparameter <em>T</em> is used to
+    soften the distribution so that the student can learn from the relative ordering of
+    all class scores, not just the top-1 prediction.
+  </p>
+
+  <div class="eq">
+    p<sub>i</sub>(T) = exp(z<sub>i</sub>/T) / &sum;<sub>j</sub> exp(z<sub>j</sub>/T)
+  </div>
+
+  <p>
+    At temperature <code>T = 1</code> this is the standard softmax. At <code>T &gt; 1</code>
+    the distribution is smoother, revealing more structure across classes. The distillation
+    loss is the <strong>KL divergence</strong> between teacher and student soft probabilities,
+    added to the standard cross-entropy loss with true labels:
+  </p>
+
+  <div class="eq">
+    L = (1 &minus; &alpha;) &middot; L<sub>CE</sub>(y, p<sub>S</sub>) &nbsp;+&nbsp; &alpha; &middot; T&sup2; &middot; KL(p<sub>T</sub>(T) &Vert; p<sub>S</sub>(T))
+  </div>
+
+  <p>
+    The <code>T&sup2;</code> factor compensates for the smaller gradient magnitude at high
+    temperatures. Common choices: <code>T &isin; [3, 5, 10]</code>, <code>&alpha; &isin; [0.5, 0.9]</code>.
+  </p>
+
+  <div class="callout amber">
+    <strong>Why not just use one-hot labels?</strong> Soft labels encode
+    <em>dark knowledge</em>&thinsp;&mdash;&thinsp;a teacher that assigns non-trivial
+    probability to visually similar classes is telling the student about semantic
+    similarity for free, acting as a form of implicit data augmentation.
+  </div>
+
+  <h3>Variants</h3>
+  <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
+    <li><strong>Born-Again Networks (BAN)</strong> &mdash; iteratively re-train a model of the
+        <em>same</em> architecture using the previous generation as teacher; successive
+        generations consistently outperform the original.</li>
+    <li><strong>Self-distillation</strong> &mdash; uses shallower sub-networks within the same
+        model as the teacher, requiring no separate training run.</li>
+    <li><strong>Label smoothing</strong> &mdash; can be seen as a degenerate case of
+        response-based distillation with a uniform teacher.</li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════════
+       4. FEATURE-BASED
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="feature-based">4. Feature-Based Distillation</h2>
+
+  <p>
+    Rather than only looking at the final output, feature-based (or <em>hint-based</em>)
+    distillation aligns <strong>intermediate hidden representations</strong>. This is
+    particularly powerful because intermediate features capture hierarchical structure&thinsp;&mdash;&thinsp;edges,
+    textures, object parts&thinsp;&mdash;&thinsp;that is lost by the time it reaches the
+    logit layer.
+  </p>
+  <p>
+    The challenge: teacher and student usually have <em>different widths</em> (channel
+    dimensions). You cannot directly compute a loss between a
+    <code>512&times;H&times;W</code> teacher tensor and a <code>128&times;H&times;W</code>
+    student tensor. This is solved by a lightweight <strong>projector</strong> (also called
+    adapter, regressor, or translation layer).
+  </p>
+
+  <!-- ── Projector sub-section ─────────────────────────── -->
+  <h3 id="projector">The Projector / Adapter</h3>
+
+  <p>
+    A projector is a small neural network module (often a single <code>1&times;1</code>
+    convolution or a two-layer MLP) that maps the student&rsquo;s feature tensor into
+    the same dimensionality as the teacher&rsquo;s, so a pixel-wise or channel-wise
+    comparison can be made.
+  </p>
+
+  <div class="callout teal">
+    <strong>Design choices for the projector:</strong>
+    <ul style="margin: 0.5rem 0 0; padding-left: 1.25rem;">
+      <li><code>1&times;1 conv</code> &mdash; cheapest, preserves spatial resolution, no non-linearity.</li>
+      <li><code>BN + ReLU + 1&times;1 conv</code> &mdash; adds capacity, handles distribution shift.</li>
+      <li><code>MLP (flatten)</code> &mdash; used when distilling from global features (e.g. ViT [CLS] tokens).</li>
+      <li><strong>No projector</strong> &mdash; valid when architectures share the same width (same-arch distillation).</li>
+    </ul>
+  </div>
+
+  <p>
+    The projector is trained <em>jointly</em> with the student and <em>discarded at
+    inference time</em>&thinsp;&mdash;&thinsp;it adds zero cost to the deployed model.
+    Its sole purpose is to act as a bridge during training.
+  </p>
+  <p>
+    Some methods (e.g. <a href="https://arxiv.org/abs/1412.6550" target="_blank">FitNets</a>)
+    place the projector on the <em>student</em> side (student → teacher space), while others
+    (e.g. CRD) place it on the <em>teacher</em> side or use symmetric projectors.
+    The choice can subtly affect what the student is forced to learn.
+  </p>
+
+  <!-- ── Feature diagram ───────────────────────────────── -->
+  <h3 id="feature-diagram">Interactive Feature Distillation Diagram</h3>
+
+  <div class="diagram-wrap">
+    <svg id="svg-feature" viewBox="0 0 820 400" width="100%" xmlns="http://www.w3.org/2000/svg"
+         aria-label="Feature-based knowledge distillation diagram" role="img" style="max-height:420px;">
+
+      <defs>
+        <marker id="arr2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#64748b"/>
+        </marker>
+        <marker id="arr2-dashed" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#94a3b8"/>
+        </marker>
+        <marker id="arr2-loss" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#e11d48"/>
+        </marker>
+      </defs>
+
+      <!-- ── Teacher backbone ── -->
+      <g class="kd-node" data-tip="Teacher backbone — large pre-trained network" data-href="#overview" aria-label="Teacher Backbone">
+        <rect x="20" y="60" width="130" height="180" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="85" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#1e40af">Teacher</text>
+        <text x="85" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#3b82f6">Backbone</text>
+        <!-- layer bars -->
+        <rect x="38" y="116" width="94" height="12" rx="3" fill="#bfdbfe"/>
+        <rect x="38" y="134" width="94" height="12" rx="3" fill="#93c5fd"/>
+        <rect x="38" y="152" width="94" height="12" rx="3" fill="#60a5fa"/>
+        <rect x="38" y="170" width="94" height="12" rx="3" fill="#3b82f6"/>
+        <rect x="38" y="188" width="94" height="12" rx="3" fill="#2563eb"/>
+        <!-- tap arrow -->
+        <line x1="132" y1="170" x2="155" y2="170" stroke="#2563eb" stroke-width="1.6" marker-end="url(#arr2)"/>
+        <text x="85" y="230" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#64748b">C_T × H × W</text>
+      </g>
+
+      <!-- ── Teacher feature map ── -->
+      <g class="kd-node" data-tip="Teacher feature map — rich, high-dimensional representation" data-href="#feature-based" aria-label="Teacher Feature Map">
+        <rect x="160" y="130" width="110" height="80" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+        <text x="215" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#1e40af">Teacher</text>
+        <text x="215" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#1e40af">Features</text>
+        <text x="215" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#3b82f6">f<tspan dy="3" font-size="8">T</tspan></text>
+      </g>
+
+      <!-- Arrow teacher features → loss -->
+      <line x1="270" y1="170" x2="520" y2="170" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+      <!-- ── Projector ── -->
+      <g class="kd-node" data-tip="Click: learn about the projector's role" data-href="#projector" aria-label="Projector / Adapter">
+        <rect x="335" y="250" width="150" height="88" rx="12" fill="#fefce8" stroke="#ca8a04" stroke-width="2.2" filter="url(#card-shadow)"/>
+        <text x="410" y="280" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#92400e">Projector</text>
+        <text x="410" y="298" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#a16207">1×1 conv / MLP</text>
+        <text x="410" y="313" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#ca8a04">C_S → C_T</text>
+        <!-- gear icon suggestion -->
+        <text x="410" y="330" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#d97706">discarded at inference</text>
+      </g>
+
+      <!-- ── Student feature map ── -->
+      <g class="kd-node" data-tip="Student feature map — compact representation to be aligned" data-href="#feature-based" aria-label="Student Feature Map">
+        <rect x="540" y="250" width="110" height="80" rx="10" fill="#d1fae5" stroke="#16a34a" stroke-width="1.6"/>
+        <text x="595" y="282" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#15803d">Student</text>
+        <text x="595" y="298" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#15803d">Features</text>
+        <text x="595" y="320" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#16a34a">f<tspan dy="3" font-size="8">S</tspan></text>
+      </g>
+
+      <!-- Arrow: student features → projector -->
+      <line x1="595" y1="250" x2="490" y2="338" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+      <!-- Arrow: projector output → loss node -->
+      <line x1="410" y1="250" x2="530" y2="190" stroke="#ca8a04" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/>
+      <text x="450" y="224" font-family="Inter,sans-serif" font-size="9.5" fill="#92400e" transform="rotate(-30, 450, 224)">projected</text>
+
+      <!-- ── Loss node ── -->
+      <g class="kd-node" data-tip="Feature alignment loss — e.g. L2 or cosine similarity" data-href="#loss-functions" aria-label="Feature Alignment Loss">
+        <rect x="525" y="130" width="150" height="80" rx="12" fill="#fff1f2" stroke="#e11d48" stroke-width="2" filter="url(#card-shadow)"/>
+        <text x="600" y="162" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#be123c">Feature</text>
+        <text x="600" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#be123c">Alignment Loss</text>
+        <text x="600" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#e11d48">L2 / cosine / KL</text>
+      </g>
+
+      <!-- Arrow: loss → student backbone (gradient) -->
+      <line x1="675" y1="170" x2="730" y2="170" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2-loss)"/>
+      <text x="690" y="163" font-family="Inter,sans-serif" font-size="9" fill="#e11d48">∇</text>
+
+      <!-- ── Student backbone ── -->
+      <g class="kd-node" data-tip="Student backbone — compact network being optimised" data-href="#overview" aria-label="Student Backbone">
+        <rect x="670" y="60" width="130" height="180" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="735" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#15803d">Student</text>
+        <text x="735" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#22c55e">Backbone</text>
+        <rect x="688" y="116" width="94" height="12" rx="3" fill="#bbf7d0"/>
+        <rect x="688" y="134" width="94" height="12" rx="3" fill="#86efac"/>
+        <rect x="688" y="152" width="94" height="12" rx="3" fill="#4ade80"/>
+        <rect x="688" y="188" width="94" height="12" rx="3" fill="#16a34a"/>
+        <!-- tap -->
+        <line x1="670" y1="170" x2="655" y2="170" stroke="#16a34a" stroke-width="1.6" marker-end="url(#arr2)"/>
+        <text x="735" y="230" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#64748b">C_S × H × W</text>
+      </g>
+
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>Teacher features</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ca8a04"></div>Projector (adapter)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e11d48"></div>Alignment loss</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div>Student features</div>
+    </div>
+    <p class="diagram-caption">
+      Figure 2 — Feature-based distillation pipeline.
+      <strong>Click the yellow Projector block</strong> to read why it exists and how to design it.
+      Click the red Loss block to jump to the loss functions section.
+    </p>
+  </div>
+
+  <h3 id="hints">FitNets &amp; Attention Transfer</h3>
+
+  <p>
+    <strong>FitNets</strong> (Romero et al., 2015) was among the first to show that
+    aligning <em>mid-network</em> features outperforms pure response distillation, especially
+    when the student is much thinner than the teacher. They introduce a two-stage
+    training procedure: first pre-train the student to mimic a chosen &ldquo;hint&rdquo;
+    layer, then fine-tune end-to-end with both task and distillation losses.
+  </p>
+  <p>
+    <strong>Attention Transfer</strong> (Zagoruyko &amp; Komodakis, 2017) instead aligns
+    <em>spatial attention maps</em>&thinsp;&mdash;&thinsp;the sum of squared feature activations
+    across channels, normalised to unit norm. This is cheaper (a single scalar map per
+    spatial location) and sometimes more transferable because attention maps are more
+    architecture-agnostic than raw feature tensors.
+  </p>
+  <div class="eq">
+    A(F) = &sum;<sub>c</sub> |F<sub>c</sub>|<sup>2</sup> &nbsp;&nbsp; &isin; &Ropf;<sup>H &times; W</sup>
+    &nbsp;&nbsp;&nbsp;
+    L<sub>AT</sub> = &sum;<sub>l</sub> &Vert; A(F<sub>T</sub><sup>l</sup>) / &Vert;A(F<sub>T</sub><sup>l</sup>)&Vert; &minus; A(F<sub>S</sub><sup>l</sup>) / &Vert;A(F<sub>S</sub><sup>l</sup>)&Vert; &Vert;&sup2;
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       5. RELATION-BASED
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="relation-based">5. Relation-Based Distillation</h2>
+
+  <p>
+    Relation-based methods shift focus from individual feature vectors to the
+    <em>structure</em> they form. The intuition: even if the student cannot replicate
+    the teacher&rsquo;s exact feature values, it can learn to reproduce the
+    <strong>pairwise or higher-order relationships</strong> among samples in the
+    embedding space.
+  </p>
+
+  <div class="diagram-wrap">
+    <svg id="svg-relation" viewBox="0 0 760 280" width="100%" xmlns="http://www.w3.org/2000/svg"
+         aria-label="Relation-based distillation diagram" role="img" style="max-height:300px;">
+
+      <defs>
+        <marker id="arr3" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+          <polygon points="0 0,7 2.5,0 5" fill="#7c3aed"/>
+        </marker>
+      </defs>
+
+      <!-- Teacher embedding cloud -->
+      <g class="kd-node" data-tip="Teacher embeddings for a mini-batch" data-href="#relation-based" aria-label="Teacher Embeddings">
+        <ellipse cx="185" cy="140" rx="155" ry="100" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.8"/>
+        <text x="185" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">Teacher Embeddings</text>
+        <!-- Sample dots -->
+        <circle cx="130" cy="110" r="10" fill="#a855f7" opacity=".85"/>
+        <circle cx="200" cy="95"  r="10" fill="#a855f7" opacity=".85"/>
+        <circle cx="160" cy="155" r="10" fill="#a855f7" opacity=".85"/>
+        <circle cx="240" cy="150" r="10" fill="#a855f7" opacity=".85"/>
+        <circle cx="110" cy="165" r="10" fill="#a855f7" opacity=".85"/>
+        <circle cx="220" cy="185" r="10" fill="#a855f7" opacity=".85"/>
+        <!-- pairwise edges -->
+        <line x1="130" y1="110" x2="200" y2="95"  stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+        <line x1="200" y1="95"  x2="240" y2="150" stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+        <line x1="160" y1="155" x2="240" y2="150" stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+        <line x1="110" y1="165" x2="160" y2="155" stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+        <line x1="220" y1="185" x2="240" y2="150" stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+        <line x1="130" y1="110" x2="160" y2="155" stroke="#9333ea" stroke-width="1.2" opacity=".5"/>
+      </g>
+
+      <!-- Relation distillation block -->
+      <g class="kd-node" data-tip="Distil pairwise relationships, not just individual features" data-href="#relation-based" aria-label="Relation Distillation Loss">
+        <rect x="320" y="100" width="120" height="80" rx="12" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+        <text x="380" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#be123c">Relation</text>
+        <text x="380" y="152" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#be123c">Loss</text>
+        <text x="380" y="170" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#e11d48">Gram / CRD / RKD</text>
+      </g>
+      <line x1="340" y1="140" x2="320" y2="140" stroke="#9333ea" stroke-width="1.4" marker-end="url(#arr3)"/>
+      <line x1="440" y1="140" x2="460" y2="140" stroke="#9333ea" stroke-width="1.4" marker-end="url(#arr3)"/>
+
+      <!-- Student embedding cloud -->
+      <g class="kd-node" data-tip="Student embeddings — structure being aligned to teacher" data-href="#relation-based" aria-label="Student Embeddings">
+        <ellipse cx="575" cy="140" rx="155" ry="100" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="575" y="60" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#15803d">Student Embeddings</text>
+        <circle cx="520" cy="110" r="10" fill="#22c55e" opacity=".85"/>
+        <circle cx="590" cy="95"  r="10" fill="#22c55e" opacity=".85"/>
+        <circle cx="550" cy="155" r="10" fill="#22c55e" opacity=".85"/>
+        <circle cx="630" cy="150" r="10" fill="#22c55e" opacity=".85"/>
+        <circle cx="500" cy="165" r="10" fill="#22c55e" opacity=".85"/>
+        <circle cx="610" cy="185" r="10" fill="#22c55e" opacity=".85"/>
+        <line x1="520" y1="110" x2="590" y2="95"  stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+        <line x1="590" y1="95"  x2="630" y2="150" stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+        <line x1="550" y1="155" x2="630" y2="150" stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+        <line x1="500" y1="165" x2="550" y2="155" stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+        <line x1="610" y1="185" x2="630" y2="150" stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+        <line x1="520" y1="110" x2="550" y2="155" stroke="#16a34a" stroke-width="1.2" opacity=".5"/>
+      </g>
+
+    </svg>
+    <p class="diagram-caption">
+      Figure 3 — Relation-based distillation aligns the <em>graph structure</em> of the
+      teacher&rsquo;s embedding space (purple) with the student&rsquo;s (green), rather
+      than individual vectors.
+    </p>
+  </div>
+
+  <h3>Prominent Methods</h3>
+  <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
+    <li>
+      <strong>RKD</strong> (Park et al., 2019) &mdash; Relational Knowledge Distillation.
+      Matches pairwise <em>distance</em> and <em>angle</em> relationships between example
+      embeddings. Shown to transfer relational structure even when architectures differ wildly.
+    </li>
+    <li>
+      <strong>CRD</strong> (Tian et al., 2020) &mdash; Contrastive Representation Distillation.
+      Frames distillation as a contrastive learning problem: teacher and student embeddings
+      of the same sample should be similar, while embeddings from different samples should
+      be far apart. Achieves strong results with a cross-architecture contrastive objective.
+    </li>
+    <li>
+      <strong>NST</strong> (Huang &amp; Wang, 2017) &mdash; Neuron Selectivity Transfer.
+      Matches the distribution of neuron activations using maximum mean discrepancy (MMD)
+      rather than direct alignment.
+    </li>
+  </ul>
+
+  <!-- ═══════════════════════════════════════════════════════
+       6. LOSS FUNCTIONS
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="loss-functions">6. Loss Functions</h2>
+
+  <p>
+    Most distillation recipes combine multiple objectives. The total training loss is
+    typically a weighted sum:
+  </p>
+
+  <div class="eq">
+    L<sub>total</sub> = L<sub>task</sub> &nbsp;+&nbsp; &lambda;<sub>resp</sub>&thinsp;L<sub>response</sub>
+    &nbsp;+&nbsp; &lambda;<sub>feat</sub>&thinsp;L<sub>feature</sub>
+    &nbsp;+&nbsp; &lambda;<sub>rel</sub>&thinsp;L<sub>relation</sub>
+  </div>
+
+  <div class="card">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Loss</th>
+          <th>Formula</th>
+          <th>Used for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>KL divergence</strong></td>
+          <td><code>KL(p<sub>T</sub> ‖ p<sub>S</sub>)</code></td>
+          <td>Response-based; soft label matching</td>
+        </tr>
+        <tr>
+          <td><strong>L2 / MSE</strong></td>
+          <td><code>‖f<sub>T</sub> − φ(f<sub>S</sub>)‖²</code></td>
+          <td>Feature-based; direct channel alignment</td>
+        </tr>
+        <tr>
+          <td><strong>Cosine loss</strong></td>
+          <td><code>1 − cos(f<sub>T</sub>, φ(f<sub>S</sub>))</code></td>
+          <td>Feature-based; direction-only alignment</td>
+        </tr>
+        <tr>
+          <td><strong>Contrastive (NCE)</strong></td>
+          <td><code>−log σ(f<sub>T</sub>·f<sub>S</sub>/τ)</code></td>
+          <td>Relation-based (CRD)</td>
+        </tr>
+        <tr>
+          <td><strong>Gram / MMD</strong></td>
+          <td><code>‖G<sub>T</sub> − G<sub>S</sub>‖<sub>F</sub></code></td>
+          <td>Relation-based; style / distribution matching</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    Choosing the right combination and weighting is often empirical. A useful heuristic:
+    start with response distillation (<code>KL</code>) as a strong baseline, then add
+    a single feature-based loss at the penultimate layer. Relation-based losses tend to
+    help most when the student architecture differs significantly from the teacher.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       7. COMPARISON
+  ════════════════════════════════════════════════════════ -->
+  <h2 id="comparison">7. Method Comparison</h2>
+
+  <div class="card" style="overflow-x:auto;">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Paradigm</th>
+          <th>What is transferred</th>
+          <th>Architecture constraint</th>
+          <th>Key hyperparameter</th>
+          <th>Typical gain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Response-based</strong></td>
+          <td>Soft output logits</td>
+          <td>None — only need same # classes</td>
+          <td>Temperature <em>T</em></td>
+          <td>+0.5–2% top-1</td>
+        </tr>
+        <tr>
+          <td><strong>Feature-based</strong></td>
+          <td>Hidden layer tensors</td>
+          <td>Need spatial/channel alignment (via projector)</td>
+          <td>Layer selection, projector design</td>
+          <td>+1–3% top-1</td>
+        </tr>
+        <tr>
+          <td><strong>Relation-based</strong></td>
+          <td>Pairwise/batch structure</td>
+          <td>None — works across any architectures</td>
+          <td>Batch size, contrastive temperature τ</td>
+          <td>+0.5–2% top-1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Takeaway:</strong> Feature-based distillation generally offers the largest
+    absolute improvement but requires the most engineering (layer selection, projector
+    design, potential two-stage training). Combining all three families in a carefully
+    tuned multi-objective loss is the approach used by current state-of-the-art methods
+    such as <a href="https://arxiv.org/abs/2207.05273" target="_blank">DKD</a> and
+    <a href="https://arxiv.org/abs/2303.11098" target="_blank">ReviewKD</a>.
+  </div>
+
+  <!-- ── footer nav ────────────────────────────────────── -->
+  <div style="margin-top:4rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-top:1px solid var(--border); padding-top:2rem;">
+    <a href="#" class="back-top">
+      <i class="fa fa-arrow-up" style="font-size:0.75rem;"></i> Back to top
+    </a>
+    <a href="/" style="color:var(--slate); font-size:0.875rem; text-decoration:none;">
+      &larr; Roy Miles&rsquo;s homepage
+    </a>
+  </div>
+
+</main>
+
+<!-- ── tooltip + click JS ────────────────────────────── -->
+<script>
+  const tooltip = document.getElementById('kd-tooltip');
+
+  // Tooltip on hover
+  document.querySelectorAll('.kd-node').forEach(node => {
+    node.addEventListener('mouseenter', e => {
+      const tip = node.dataset.tip;
+      if (!tip) return;
+      tooltip.textContent = tip;
+      tooltip.style.opacity = '1';
+    });
+    node.addEventListener('mousemove', e => {
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top  = (e.clientY + 12) + 'px';
+    });
+    node.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+    });
+
+    // Click → scroll to section
+    node.addEventListener('click', () => {
+      const href = node.dataset.href;
+      if (!href) return;
+      const target = document.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // brief highlight
+        target.style.transition = 'background .3s';
+        target.style.background = '#fef9c3';
+        setTimeout(() => { target.style.background = ''; }, 1200);
+      }
+    });
+  });
+</script>
+</body>
+</html>
