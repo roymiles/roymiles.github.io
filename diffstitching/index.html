@@ -8,14 +8,11 @@
   <meta property="og:title" content="Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching">
   <meta property="og:description" content="Stitching noisy diffusion thoughts for better reasoning with reward-guided intermediate-step selection.">
   <meta property="og:url" content="https://roymiles.github.io/diffstitching/">
-  <meta property="og:image" content="https://raw.githubusercontent.com/roymiles/diffusion-stitching/main/figs/anim.gif">
+  <meta property="og:image" content="https://roymiles.github.io/images/diffstitching.png">
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://roymiles.github.io/diffstitching/">
   <link rel="icon" type="image/png" href="../images/favicon2.png" sizes="32x32">
-  <meta name="theme-color" content="#f4f1ea">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="static/css/index.css">
@@ -79,7 +76,7 @@
         <div class="teaser-card">
           <img
             class="teaser-media"
-            src="https://raw.githubusercontent.com/roymiles/diffusion-stitching/main/figs/anim.gif"
+            src="../images/diffstitching.png"
             alt="Reward-guided stitching overview"
           >
           <p class="teaser-caption">
@@ -91,38 +88,14 @@
 
     <section class="section section-divider">
       <div class="container is-max-desktop">
-        <div class="columns is-variable is-6">
-          <div class="column is-7">
-            <p class="section-kicker">Overview</p>
-            <h2 class="section-title">Abstract</h2>
-            <p class="section-copy">
-              Reasoning with large language models often benefits from generating multiple chains of thought, but common aggregation strategies usually operate at the whole-trajectory level. That means they throw away useful intermediate reasoning from paths that are only partially correct.
-            </p>
-            <p class="section-copy">
-              Reward-Guided Stitching turns cheap diffusion-sampled reasoning into a reusable pool of step-level candidates. The method samples diverse trajectories with a masked diffusion language model, scores every intermediate step with an off-the-shelf process reward model, and stitches the highest-quality steps into a composite rationale for a downstream autoregressive solver. Across six math and coding benchmarks, the method improves average accuracy by up to 23.8% while reducing latency by up to 1.8x compared with diffusion and unified baselines.
-            </p>
-          </div>
-          <div class="column is-5">
-            <div class="stat-grid">
-              <article class="stat-card">
-                <p class="stat-value">23.8%</p>
-                <p class="stat-label">Average accuracy improvement</p>
-              </article>
-              <article class="stat-card">
-                <p class="stat-value">1.8x</p>
-                <p class="stat-label">Lower latency than baseline diffusion pipelines</p>
-              </article>
-              <article class="stat-card">
-                <p class="stat-value">6</p>
-                <p class="stat-label">Math and coding benchmarks evaluated</p>
-              </article>
-              <article class="stat-card">
-                <p class="stat-value">0</p>
-                <p class="stat-label">Additional training required by the stitching stage</p>
-              </article>
-            </div>
-          </div>
-        </div>
+        <p class="section-kicker">Overview</p>
+        <h2 class="section-title">Abstract</h2>
+        <p class="section-copy">
+          Reasoning with large language models often benefits from generating multiple chains of thought, but common aggregation strategies usually operate at the whole-trajectory level. That means they throw away useful intermediate reasoning from paths that are only partially correct.
+        </p>
+        <p class="section-copy">
+          Reward-Guided Stitching turns cheap diffusion-sampled reasoning into a reusable pool of step-level candidates. The method samples diverse trajectories with a masked diffusion language model, scores every intermediate step with an off-the-shelf process reward model, and stitches the highest-quality steps into a composite rationale for a downstream autoregressive solver. Across six math and coding benchmarks, the method improves average accuracy by up to 23.8% while reducing latency by up to 1.8x compared with diffusion and unified baselines.
+        </p>
       </div>
     </section>
 
@@ -192,39 +165,39 @@
               <table class="table is-fullwidth benchmark-table">
                 <thead>
                   <tr>
-                    <th>Setup</th>
+                    <th>Dataset</th>
                     <th>Accuracy</th>
                     <th>Avg. steps</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td><code>gsm8k_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>GSM8K</code></td>
                     <td>91.81%</td>
                     <td>108.28</td>
                   </tr>
                   <tr>
-                    <td><code>math_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>MATH</code></td>
                     <td>55.00%</td>
                     <td>138.32</td>
                   </tr>
                   <tr>
-                    <td><code>humaneval_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>HumanEval</code></td>
                     <td>73.78%</td>
                     <td>447.37</td>
                   </tr>
                   <tr>
-                    <td><code>humanevalplus_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>HumanEval+</code></td>
                     <td>70.12%</td>
                     <td>447.37</td>
                   </tr>
                   <tr>
-                    <td><code>mbpp_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>MBPP</code></td>
                     <td>73.00%</td>
                     <td>188.68</td>
                   </tr>
                   <tr>
-                    <td><code>mbppplus_GSAI-ML_LLaDA-8B-Instruct_512</code></td>
+                    <td><code>MBPP+</code></td>
                     <td>83.86%</td>
                     <td>176.65</td>
                   </tr>
@@ -238,43 +211,16 @@
 
     <section class="section section-tint" id="citation">
       <div class="container is-max-desktop">
-        <div class="columns is-variable is-6">
-          <div class="column is-6">
-            <p class="section-kicker">Citation</p>
-            <h2 class="section-title">BibTeX</h2>
-            <div class="code-card">
-              <button class="copy-button" type="button" data-copy-target="bibtex-block">Copy BibTeX</button>
-              <pre id="bibtex-block"><code>@misc{miles2026testtimescalingdiffusionlanguage,
+        <p class="section-kicker">Citation</p>
+        <h2 class="section-title">BibTeX</h2>
+        <div class="code-card">
+          <button class="copy-button" type="button" data-copy-target="bibtex-block">Copy BibTeX</button>
+          <pre id="bibtex-block"><code>@misc{miles2026testtimescalingdiffusionlanguage,
   title={Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching},
   author={Roy Miles and Aysim Toker and Andreea-Maria Oncescu and Songcen Xu and Jiankang Deng and Ismail Elezi},
   year={2026},
   journal={arXiv preprint}
 }</code></pre>
-            </div>
-          </div>
-
-          <div class="column is-6">
-            <p class="section-kicker">Resources</p>
-            <h2 class="section-title">Links</h2>
-            <div class="resource-list">
-              <a class="resource-row" href="https://arxiv.org/pdf/2602.22871" target="_blank" rel="noreferrer">
-                <span>Paper PDF</span>
-                <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-              </a>
-              <a class="resource-row" href="https://arxiv.org/abs/2602.22871" target="_blank" rel="noreferrer">
-                <span>arXiv abstract</span>
-                <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-              </a>
-              <a class="resource-row" href="https://github.com/roymiles/diffusion-stitching" target="_blank" rel="noreferrer">
-                <span>Code repository</span>
-                <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-              </a>
-              <a class="resource-row" href="../">
-                <span>Back to home page</span>
-                <i class="fas fa-arrow-left" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>
