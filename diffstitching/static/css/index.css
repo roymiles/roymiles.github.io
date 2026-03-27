@@ -93,30 +93,6 @@ a:hover {
   overflow: hidden;
 }
 
-.project-hero::before,
-.project-hero::after {
-  content: "";
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(8px);
-  opacity: 0.7;
-}
-
-.project-hero::before {
-  top: -6rem;
-  left: -4rem;
-  width: 16rem;
-  height: 16rem;
-  background: rgba(36, 91, 122, 0.12);
-}
-
-.project-hero::after {
-  right: -3rem;
-  bottom: 0;
-  width: 14rem;
-  height: 14rem;
-  background: rgba(197, 170, 108, 0.16);
-}
 
 .hero-body {
   padding: 4.5rem 1.5rem 3rem;
@@ -241,8 +217,8 @@ a:hover {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
-  background: linear-gradient(135deg, #d8e5ec 0%, #e8dfcf 100%);
+  object-fit: contain;
+  background: #ffffff;
 }
 
 .teaser-caption {
