@@ -88,7 +88,18 @@
       border-bottom: 2px solid #e2e8f0;
       letter-spacing: -0.02em;
     }
-    h3 { font-family: var(--font); font-size: 1.2rem; font-weight: 700; margin: 2.25rem 0 0.6rem; color: #1e293b; }
+    h3 {
+      font-family: var(--font);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 2.5rem 0 0.85rem;
+      color: #0f172a;
+      border-left: 4px solid var(--hi);
+      background: #fff7ed;
+      border-radius: 0.75rem;
+      padding: 0.45rem 0.85rem;
+      box-shadow: 0 6px 18px rgba(15,23,42,0.04);
+    }
     p  { margin: 0 0 1.1rem; }
     a  { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
     a:hover { color: var(--indigo); }
@@ -508,20 +519,20 @@
 
       <g class="kd-node" data-tip="Teacher backbone (frozen)" data-href="#feature-based"
          data-fill="#eff6ff" data-fill-hover="#dbeafe">
-        <rect x="607" y="108" width="155" height="145" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
-        <text x="685" y="148" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Teacher ❄️</text>
-        <text x="685" y="166" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#3b82f6">Large / Pre-trained</text>
-        <rect x="631" y="180" width="108" height="8" rx="3" fill="#bfdbfe" opacity=".8"/>
-        <rect x="641" y="194" width="88" height="8" rx="3" fill="#93c5fd" opacity=".8"/>
-        <rect x="651" y="208" width="68" height="8" rx="3" fill="#60a5fa" opacity=".8"/>
-        <rect x="661" y="222" width="48" height="8" rx="3" fill="#3b82f6" opacity=".8"/>
+        <rect x="607" y="18" width="155" height="145" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="685" y="58" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Teacher ❄️</text>
+        <text x="685" y="76" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#3b82f6">Large / Pre-trained</text>
+        <rect x="631" y="90" width="108" height="8" rx="3" fill="#bfdbfe" opacity=".8"/>
+        <rect x="641" y="104" width="88" height="8" rx="3" fill="#93c5fd" opacity=".8"/>
+        <rect x="651" y="118" width="68" height="8" rx="3" fill="#60a5fa" opacity=".8"/>
+        <rect x="661" y="132" width="48" height="8" rx="3" fill="#3b82f6" opacity=".8"/>
       </g>
 
-      <line x1="213" y1="144" x2="324" y2="108" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
-      <line x1="213" y1="220" x2="324" y2="252" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
+      <line x1="226" y1="144" x2="308" y2="117" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
+      <line x1="226" y1="220" x2="308" y2="244" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
 
-      <line x1="516" y1="91" x2="607" y2="144" stroke="#64748b" stroke-width="1.8" stroke-dasharray="6,4"/>
-      <text x="560" y="100" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">feature loss</text>
+      <line x1="516" y1="91" x2="600" y2="91" stroke="#64748b" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#arru)"/>
+      <text x="558" y="80" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">feature loss</text>
 
       <line x1="516" y1="269" x2="676" y2="269" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
       <text x="596" y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">task loss</text>
@@ -603,16 +614,11 @@
         <line x1="130" y1="125" x2="162" y2="168" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
       </g>
 
-      <!-- Relation loss -->
-      <g class="kd-node" data-tip="Distil pairwise relationships, not individual features" data-href="#relation-based"
-         data-fill="#fff1f2" data-fill-hover="#fecdd3">
-        <rect x="326" y="110" width="128" height="88" rx="13" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
-        <text x="390" y="148" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11.5" font-weight="700" fill="#be123c">Relation</text>
-        <text x="390" y="165" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11.5" font-weight="700" fill="#be123c">Loss</text>
-        <text x="390" y="185" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="9.5" fill="#e11d48">RKD / CRD / NST</text>
-      </g>
-      <line x1="352" y1="155" x2="330" y2="155" stroke="#9333ea" stroke-width="1.4" marker-end="url(#arr3)"/>
-      <line x1="454" y1="155" x2="476" y2="155" stroke="#9333ea" stroke-width="1.4" marker-end="url(#arr3)"/>
+      <!-- Relation arrow -->
+      <line x1="332" y1="155" x2="448" y2="155" stroke="#7c3aed" stroke-width="3" marker-end="url(#arr3)"/>
+      <text x="390" y="132" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">match pairwise geometry</text>
+      <text x="390" y="176" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10.5" fill="#7c3aed">RKD / CRD / NST</text>
+      <text x="390" y="194" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10.5" fill="#64748b">distances, angles, and batch structure</text>
 
       <!-- Student cloud -->
       <g class="kd-node" data-tip="Student embeddings — structure aligned to teacher" data-href="#relation-based"
@@ -634,8 +640,8 @@
       </g>
     </svg>
     <p class="diagram-caption">
-      Figure 3. Relation-based distillation aligns the graph structure of the
-      teacher's embedding space (purple) with the student's (green), rather than individual vectors.
+      Figure 3. Relation-based distillation matches the geometry of the teacher and student embedding spaces.
+      The loss acts on pairwise relationships rather than on individual coordinates.
     </p>
   </div>
 
@@ -779,7 +785,7 @@
   <div class="card" style="overflow-x:auto;">
     <table class="comparison-table">
       <thead>
-        <tr><th>Paradigm</th><th>What is transferred</th><th>Architecture constraint</th><th>Key hyperparameter</th><th>Typical gain</th></tr>
+        <tr><th>Paradigm</th><th>What is transferred</th><th>Architecture constraint</th><th>Key hyperparameter</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -787,21 +793,18 @@
           <td>Soft output logits</td>
           <td>None; only requires same number of classes</td>
           <td>Temperature \(T\)</td>
-          <td>+0.5 to 2% top-1</td>
         </tr>
         <tr>
           <td>Feature-based</td>
           <td>Hidden layer tensors</td>
           <td>Requires alignment via a projector</td>
           <td>Layer selection, projector design</td>
-          <td>+1 to 3% top-1</td>
         </tr>
         <tr>
           <td>Relation-based</td>
           <td>Pairwise / batch structure</td>
           <td>None; works across any architectures</td>
           <td>Batch size, contrastive temperature \(\tau\)</td>
-          <td>+0.5 to 2% top-1</td>
         </tr>
       </tbody>
     </table>
