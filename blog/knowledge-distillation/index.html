@@ -90,15 +90,10 @@
     }
     h3 {
       font-family: var(--font);
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 700;
-      margin: 2.5rem 0 0.85rem;
+      margin: 1.9rem 0 0.45rem;
       color: #0f172a;
-      border-left: 4px solid var(--hi);
-      background: #fff7ed;
-      border-radius: 0.75rem;
-      padding: 0.45rem 0.85rem;
-      box-shadow: 0 6px 18px rgba(15,23,42,0.04);
     }
     p  { margin: 0 0 1.1rem; }
     a  { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
@@ -417,7 +412,7 @@
     semantic structure for free, acting as implicit data augmentation.
   </div>
 
-  <h3>Variants</h3>
+  <h3>Variants:</h3>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">Born-Again Networks (BAN)</span> [<a href="#ref3">3</a>] iteratively re-train a model of the
         same architecture using the previous generation as teacher; successive generations consistently improve.</li>
@@ -444,7 +439,7 @@
     This is solved by a lightweight <span class="hi">projector</span>.
   </p>
 
-  <h3 id="projector">The Projector / Adapter</h3>
+  <h3 id="projector">The Projector / Adapter:</h3>
 
   <p>
     A projector is a small module (often a single \(1{\times}1\) convolution or a
@@ -468,7 +463,9 @@
     that the projector implicitly encodes information about past training examples, enabling
     relational gradients for the student. They also show that representation normalisation
     is tightly coupled with projector training dynamics, and propose a soft maximum function
-    to handle capacity gaps between teacher and student.
+    to handle capacity gaps between teacher and student. Their analysis also suggests that
+    a projector can still be beneficial <span class="hi">even when feature dimensions already match</span>,
+    because it changes the optimisation geometry rather than merely fixing a width mismatch.
   </p>
 
   <div class="callout teal">
@@ -477,11 +474,11 @@
       <li><code>1&times;1 conv</code> preserves spatial resolution with minimal compute and no non-linearity.</li>
       <li><code>BN + ReLU + 1&times;1 conv</code> adds capacity and handles distribution shift.</li>
       <li><code>MLP (flattened)</code> is used when distilling global features such as ViT [CLS] tokens.</li>
-      <li>No projector is needed when architectures share the same width.</li>
+      <li>Even when teacher and student have the same width, a projector can still help in practice by improving optimisation and preserving useful relational structure [<a href="#ref15">15</a>].</li>
     </ul>
   </div>
 
-  <h3 id="feature-diagram">Interactive Feature Distillation Diagram</h3>
+  <h3 id="feature-diagram">Interactive Feature Distillation Diagram:</h3>
 
   <div class="diagram-wrap">
     <svg id="svg-feature" viewBox="0 0 820 360" width="100%" xmlns="http://www.w3.org/2000/svg"
@@ -551,7 +548,7 @@
     </p>
   </div>
 
-  <h3 id="hints">FitNets and Attention Transfer</h3>
+  <h3 id="hints">FitNets and Attention Transfer:</h3>
 
   <p>
     <span class="hi">FitNets</span> [<a href="#ref4">4</a>] was among the first to show that aligning
@@ -598,45 +595,45 @@
       <!-- Teacher cloud -->
       <g class="kd-node" data-tip="Teacher embeddings for a mini-batch" data-href="#relation-based"
          data-fill="#fdf4ff" data-fill-hover="#f3e8ff">
-        <ellipse cx="190" cy="155" rx="162" ry="110" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.8"/>
-        <text x="190" y="65" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">Teacher Embeddings</text>
-        <circle cx="130" cy="125" r="11" fill="#a855f7" opacity=".85"/>
-        <circle cx="205" cy="108" r="11" fill="#a855f7" opacity=".85"/>
-        <circle cx="162" cy="168" r="11" fill="#a855f7" opacity=".85"/>
-        <circle cx="248" cy="162" r="11" fill="#a855f7" opacity=".85"/>
-        <circle cx="108" cy="178" r="11" fill="#a855f7" opacity=".85"/>
-        <circle cx="225" cy="200" r="11" fill="#a855f7" opacity=".85"/>
-        <line x1="130" y1="125" x2="205" y2="108" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
-        <line x1="205" y1="108" x2="248" y2="162" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
-        <line x1="162" y1="168" x2="248" y2="162" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
-        <line x1="108" y1="178" x2="162" y2="168" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
-        <line x1="225" y1="200" x2="248" y2="162" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
-        <line x1="130" y1="125" x2="162" y2="168" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <ellipse cx="160" cy="155" rx="128" ry="104" fill="#fdf4ff" stroke="#9333ea" stroke-width="1.8"/>
+        <text x="160" y="92" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">Teacher Embeddings</text>
+        <circle cx="112" cy="126" r="11" fill="#a855f7" opacity=".85"/>
+        <circle cx="178" cy="108" r="11" fill="#a855f7" opacity=".85"/>
+        <circle cx="142" cy="170" r="11" fill="#a855f7" opacity=".85"/>
+        <circle cx="218" cy="160" r="11" fill="#a855f7" opacity=".85"/>
+        <circle cx="94" cy="182" r="11" fill="#a855f7" opacity=".85"/>
+        <circle cx="196" cy="206" r="11" fill="#a855f7" opacity=".85"/>
+        <line x1="112" y1="126" x2="178" y2="108" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <line x1="178" y1="108" x2="218" y2="160" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <line x1="142" y1="170" x2="218" y2="160" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <line x1="94" y1="182" x2="142" y2="170" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <line x1="196" y1="206" x2="218" y2="160" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
+        <line x1="112" y1="126" x2="142" y2="170" stroke="#9333ea" stroke-width="1.4" opacity=".5"/>
       </g>
 
       <!-- Relation arrow -->
-      <line x1="332" y1="155" x2="448" y2="155" stroke="#7c3aed" stroke-width="3" marker-end="url(#arr3)"/>
-      <text x="390" y="132" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">match pairwise geometry</text>
+      <line x1="306" y1="155" x2="474" y2="155" stroke="#7c3aed" stroke-width="3" marker-end="url(#arr3)"/>
+      <text x="390" y="126" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#6b21a8">match pairwise geometry</text>
       <text x="390" y="176" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10.5" fill="#7c3aed">RKD / CRD / NST</text>
       <text x="390" y="194" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="10.5" fill="#64748b">distances, angles, and batch structure</text>
 
       <!-- Student cloud -->
       <g class="kd-node" data-tip="Student embeddings — structure aligned to teacher" data-href="#relation-based"
          data-fill="#f0fdf4" data-fill-hover="#dcfce7">
-        <ellipse cx="590" cy="155" rx="162" ry="110" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
-        <text x="590" y="65" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">Student Embeddings</text>
-        <circle cx="530" cy="125" r="11" fill="#22c55e" opacity=".85"/>
-        <circle cx="605" cy="108" r="11" fill="#22c55e" opacity=".85"/>
-        <circle cx="562" cy="168" r="11" fill="#22c55e" opacity=".85"/>
-        <circle cx="648" cy="162" r="11" fill="#22c55e" opacity=".85"/>
-        <circle cx="508" cy="178" r="11" fill="#22c55e" opacity=".85"/>
-        <circle cx="625" cy="200" r="11" fill="#22c55e" opacity=".85"/>
-        <line x1="530" y1="125" x2="605" y2="108" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
-        <line x1="605" y1="108" x2="648" y2="162" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
-        <line x1="562" y1="168" x2="648" y2="162" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
-        <line x1="508" y1="178" x2="562" y2="168" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
-        <line x1="625" y1="200" x2="648" y2="162" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
-        <line x1="530" y1="125" x2="562" y2="168" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <ellipse cx="620" cy="155" rx="128" ry="104" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="620" y="92" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" font-weight="700" fill="#15803d">Student Embeddings</text>
+        <circle cx="572" cy="126" r="11" fill="#22c55e" opacity=".85"/>
+        <circle cx="638" cy="108" r="11" fill="#22c55e" opacity=".85"/>
+        <circle cx="602" cy="170" r="11" fill="#22c55e" opacity=".85"/>
+        <circle cx="678" cy="160" r="11" fill="#22c55e" opacity=".85"/>
+        <circle cx="554" cy="182" r="11" fill="#22c55e" opacity=".85"/>
+        <circle cx="656" cy="206" r="11" fill="#22c55e" opacity=".85"/>
+        <line x1="572" y1="126" x2="638" y2="108" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <line x1="638" y1="108" x2="678" y2="160" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <line x1="602" y1="170" x2="678" y2="160" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <line x1="554" y1="182" x2="602" y2="170" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <line x1="656" y1="206" x2="678" y2="160" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
+        <line x1="572" y1="126" x2="602" y2="170" stroke="#16a34a" stroke-width="1.4" opacity=".5"/>
       </g>
     </svg>
     <p class="diagram-caption">
@@ -645,7 +642,7 @@
     </p>
   </div>
 
-  <h3>Prominent Methods</h3>
+  <h3>Prominent Methods:</h3>
   <ul style="padding-left:1.5rem; margin-bottom:1.25rem;">
     <li><span class="hi">RKD</span> [<a href="#ref6">6</a>] matches pairwise distance and angle
         relationships between example embeddings, transferring relational structure even across very different architectures.</li>
@@ -666,7 +663,7 @@
     These differences trace back to fundamental architectural and data-distribution choices.
   </p>
 
-  <h3>Output space</h3>
+  <h3>Output space:</h3>
   <p>
     In classification, the output is a distribution over a fixed and small number of classes
     (up to around 1000 for ImageNet). In language modeling the output is a distribution
@@ -677,7 +674,7 @@
     exploit this by distilling directly on softmax logits over the entire vocabulary.
   </p>
 
-  <h3>Feature alignment challenges</h3>
+  <h3>Feature alignment challenges:</h3>
   <p>
     In vision models, intermediate feature maps are spatial tensors
     (\(C \times H \times W\)) and the projector can be a simple \(1{\times}1\) convolution.
@@ -694,7 +691,7 @@
     <li>Sequence lengths are dynamic and change per batch, making fixed spatial projectors inapplicable.</li>
   </ul>
 
-  <h3>Vocabulary and tokeniser mismatch</h3>
+  <h3>Vocabulary and tokeniser mismatch:</h3>
   <p>
     When teacher and student use different tokenisers (a common scenario in cross-model
     LLM distillation), token-level response distillation is not directly possible.
@@ -702,7 +699,7 @@
     vocabulary spaces, or by working at the sentence embedding level rather than the token level.
   </p>
 
-  <h3>Auto-regressive generation</h3>
+  <h3>Auto-regressive generation:</h3>
   <p>
     For generative language models, distillation must account for exposure bias:
     the student generates its own context at inference, but during training it sees the
@@ -712,7 +709,7 @@
     equivalent in classification.
   </p>
 
-  <h3>Diffusion language models</h3>
+  <h3>Diffusion language models:</h3>
   <p>
     An emerging frontier is applying distillation to masked diffusion language
     models such as MDLM and LLaDA. Here the teacher's output is not a single forward pass
@@ -782,7 +779,7 @@
   ════════════════════════════════════════════════════════ -->
   <h2 id="comparison">8. Method Comparison</h2>
 
-  <div class="card" style="overflow-x:auto;">
+  <div class="card" style="overflow-x:auto; margin-top:1.25rem;">
     <table class="comparison-table">
       <thead>
         <tr><th>Paradigm</th><th>What is transferred</th><th>Architecture constraint</th><th>Key hyperparameter</th></tr>
