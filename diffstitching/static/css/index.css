@@ -211,6 +211,8 @@ a:hover {
 .teaser-card {
   overflow: hidden;
   border-radius: var(--radius-lg);
+  padding-inline: 1.5rem;
+  padding-top: 1rem;
 }
 
 .teaser-media {
