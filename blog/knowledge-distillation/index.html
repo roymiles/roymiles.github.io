@@ -83,7 +83,7 @@
     h2 {
       font-family: var(--font);
       font-size: 1.7rem; font-weight: 800;
-      margin: 3.5rem 0 1.1rem; padding-bottom: 0.6rem;
+      margin: 3.5rem 0 1.1rem; padding-bottom: 0.2em;
       color: #0f172a;
       border-bottom: 2px solid #e2e8f0;
       letter-spacing: -0.02em;
@@ -192,7 +192,7 @@
     }
     .back-top:hover { color: var(--blue); border-color: #bfdbfe; background: #eff6ff; }
 
-    .katex-display { margin: 1.4rem 0; overflow-x: auto; }
+    .katex-display { margin: 1.4rem 0; overflow: visible; }
 
     @media (max-width: 640px) {
       .card, .diagram-wrap { padding: 1.1rem; }
@@ -482,10 +482,14 @@
       </defs>
 
       <g class="kd-node" data-tip="Student backbone (trainable)" data-href="#feature-based"
-         data-fill="#dbeafe" data-fill-hover="#bfdbfe">
-        <rect x="86" y="136" width="188" height="88" rx="10" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.6"/>
-        <text x="180" y="170" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="18" fill="#1e3a8a">Student</text>
-        <text x="180" y="194" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#334155">trainable backbone</text>
+         data-fill="#f0fdf4" data-fill-hover="#dcfce7">
+        <rect x="58" y="108" width="155" height="145" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+        <text x="136" y="148" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#15803d">Student</text>
+        <text x="136" y="166" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#22c55e">Compact / Efficient</text>
+        <rect x="82" y="180" width="108" height="8" rx="3" fill="#bbf7d0" opacity=".8"/>
+        <rect x="92" y="194" width="88" height="8" rx="3" fill="#86efac" opacity=".8"/>
+        <rect x="102" y="208" width="68" height="8" rx="3" fill="#4ade80" opacity=".8"/>
+        <rect x="112" y="222" width="48" height="8" rx="3" fill="#16a34a" opacity=".8"/>
       </g>
 
       <g class="kd-node" data-tip="Projector: aligns student features to teacher space" data-href="#projector"
@@ -503,17 +507,21 @@
       </g>
 
       <g class="kd-node" data-tip="Teacher backbone (frozen)" data-href="#feature-based"
-         data-fill="#fee2e2" data-fill-hover="#fecaca">
-        <rect x="566" y="136" width="188" height="88" rx="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.6"/>
-        <text x="660" y="166" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="18" fill="#991b1b">Teacher (frozen)</text>
-        <text x="660" y="190" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#334155">no gradient updates</text>
+         data-fill="#eff6ff" data-fill-hover="#dbeafe">
+        <rect x="607" y="108" width="155" height="145" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+        <text x="685" y="148" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="13" font-weight="700" fill="#1e40af">Teacher ❄️</text>
+        <text x="685" y="166" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="11" fill="#3b82f6">Large / Pre-trained</text>
+        <rect x="631" y="180" width="108" height="8" rx="3" fill="#bfdbfe" opacity=".8"/>
+        <rect x="641" y="194" width="88" height="8" rx="3" fill="#93c5fd" opacity=".8"/>
+        <rect x="651" y="208" width="68" height="8" rx="3" fill="#60a5fa" opacity=".8"/>
+        <rect x="661" y="222" width="48" height="8" rx="3" fill="#3b82f6" opacity=".8"/>
       </g>
 
-      <line x1="274" y1="156" x2="324" y2="108" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
-      <line x1="274" y1="204" x2="324" y2="252" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
+      <line x1="213" y1="144" x2="324" y2="108" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
+      <line x1="213" y1="220" x2="324" y2="252" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
 
-      <line x1="516" y1="91" x2="566" y2="166" stroke="#64748b" stroke-width="1.8" stroke-dasharray="6,4"/>
-      <text x="542" y="104" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">feature loss</text>
+      <line x1="516" y1="91" x2="607" y2="144" stroke="#64748b" stroke-width="1.8" stroke-dasharray="6,4"/>
+      <text x="560" y="100" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">feature loss</text>
 
       <line x1="516" y1="269" x2="676" y2="269" stroke="#64748b" stroke-width="1.8" marker-end="url(#arru)"/>
       <text x="596" y="257" text-anchor="middle" font-family="Segoe UI,Roboto,sans-serif" font-size="12" fill="#475569">task loss</text>
@@ -521,10 +529,10 @@
     </svg>
 
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#dbeafe"></div>Student</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#bbf7d0"></div>Student</div>
       <div class="legend-item"><div class="legend-dot" style="background:#ede9fe"></div>Projector</div>
       <div class="legend-item"><div class="legend-dot" style="background:#dcfce7"></div>Student head</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#fee2e2"></div>Teacher (frozen)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Teacher ❄️</div>
     </div>
     <p class="diagram-caption">
       Figure 2. Simplified feature distillation pipeline inspired by the projector recipe [<a href="#ref15">15</a>].
@@ -812,7 +820,7 @@
   ════════════════════════════════════════════════════════ -->
   <h2 id="references">9. References</h2>
 
-  <div class="card" style="padding:1.25rem 1.5rem;">
+  <div class="card" style="padding:1.25rem 1.5rem; margin-top:1.25rem;">
     <ul class="ref-list">
       <li id="ref1"><span class="ref-num">[1]</span><span>G. Hinton, O. Vinyals, J. Dean. <em>Distilling the Knowledge in a Neural Network.</em> NIPS Workshop, 2015. <a href="https://arxiv.org/abs/1503.02531" target="_blank">arXiv:1503.02531</a></span></li>
       <li id="ref2"><span class="ref-num">[2]</span><span>J. Gou et al. <em>Knowledge Distillation: A Survey.</em> IJCV, 2021. <a href="https://arxiv.org/abs/2006.05525" target="_blank">arXiv:2006.05525</a></span></li>
