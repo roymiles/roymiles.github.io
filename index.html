@@ -26,6 +26,9 @@
     nav a:hover { color: var(--purple); text-decoration: none; }
     .hero, .section, .section-divider { max-width: 960px; margin: 0 auto; }
     .hero { padding: 56px 24px 40px; }
+    .hero-header { display: flex; align-items: center; gap: 32px; margin-bottom: 24px; }
+    .hero-avatar { width: 150px; height: 150px; flex: 0 0 150px; border: 3px solid rgba(107,76,138,.25); border-radius: 50%; object-fit: cover; }
+    .hero-info { min-width: 0; }
     h1 { color: var(--purple); font-size: 2.6rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 10px; }
     .tagline { color: var(--lilac); font-size: 1.08rem; font-weight: 500; margin-bottom: 10px; }
     .hero p { color: #666; font-size: 1.08rem; margin-bottom: 10px; }
@@ -78,7 +81,7 @@
     .impact-group .metric { color: var(--orange); font-weight: 600; }
     .impact-group .na { color: #999; font-weight: 500; }
     footer { padding: 40px 20px; border-top: 1px solid rgba(0,0,0,.06); color: #999; font-size: .95rem; text-align: center; }
-    @media (max-width: 700px) { .hero { padding-top: 40px; } h1 { font-size: 2rem; } nav ul { gap: 16px; padding: 0 12px; } nav a { font-size: .95rem; } .research-grid { grid-template-columns: 1fr; } .section { padding: 38px 18px; } .hero { padding-left: 18px; padding-right: 18px; } .section h2 { font-size: 1.5rem; } }
+    @media (max-width: 700px) { .hero { padding-top: 40px; } .hero-header { flex-direction: column; align-items: center; } .hero-avatar { width: 130px; height: 130px; flex-basis: 130px; } .hero-info { width: 100%; } h1 { font-size: 2rem; } nav ul { gap: 16px; padding: 0 12px; } nav a { font-size: .95rem; } .research-grid { grid-template-columns: 1fr; } .section { padding: 38px 18px; } .hero { padding-left: 18px; padding-right: 18px; } .section h2 { font-size: 1.5rem; } }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
   </style>
 </head>
@@ -95,8 +98,13 @@
 
   <main>
     <section class="hero" id="about">
-      <h1>Roy Miles</h1>
-      <p class="tagline">Senior Research Scientist @ Huawei Noah's Ark Lab UK · London, United Kingdom</p>
+      <div class="hero-header">
+        <img class="hero-avatar" src="images/profile.png" alt="Roy Miles">
+        <div class="hero-info">
+          <h1>Roy Miles</h1>
+          <p class="tagline">Senior Research Scientist @ Huawei Noah's Ark Lab UK · London, United Kingdom</p>
+        </div>
+      </div>
       <p class="highlight">Making post-training for vision-language and language models more memory-efficient and practical. I am interested in how distillation, parameter-efficient fine-tuning, and new training strategies can lower the cost of adapting capable models without compromising quality. The goal is to turn those advances into reliable methods that work under real product and hardware constraints.</p>
       <div class="contact-links">
         <a class="primary" href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ">Google Scholar</a>
