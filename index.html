@@ -2,1017 +2,238 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- begin SEO -->
-  <title>Roy Miles</title>
-  <meta property="og:locale" content="en-US">
-  <meta property="og:site_name" content="Roy Miles">
-  <meta name="description" content="Roy Miles is a research scientist working on efficient computer vision, knowledge distillation, and mobile AI.">
-  <meta property="og:title" content="Roy Miles">
-  <meta property="og:description" content="Research scientist focused on efficient computer vision, knowledge distillation, and mobile AI.">
-  <link rel="canonical" href="https://roymiles.github.io/">
-  <meta property="og:url" content="https://roymiles.github.io/">
-  <script type="application/ld+json"> { "@context" : "http://schema.org", "@type" : "Person", "name" : "Roy Miles", "url" : "https://roymiles.github.io", "sameAs" : null } </script> <!-- end SEO -->
-  <link href="https://roymiles.github.io/feed.xml" type="application/atom+xml" rel="alternate" title="Roy Miles Feed">
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script> document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js '; </script> <!-- For all browsers -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="assets/css/new_main.css">
+  <title>Roy Miles — Personal Homepage</title>
+  <meta name="description" content="Roy Miles is a Senior Research Scientist working on efficient foundation models, multimodal learning, and mobile vision.">
+  <meta property="og:title" content="Roy Miles">
+  <meta property="og:description" content="Senior Research Scientist working on efficient foundation models, multimodal learning, and mobile vision.">
+  <meta property="og:url" content="https://roymiles.github.io/">
+  <link rel="canonical" href="https://roymiles.github.io/">
+  <link rel="icon" type="image/png" href="images/favicon2.png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --border-subtle: rgba(15, 23, 42, 0.08);
-      --surface-soft: rgba(255, 255, 255, 0.88);
-      --shadow-soft: 0 14px 40px rgba(15, 23, 42, 0.08);
-      --nav-offset: 5rem;
-    }
-    body {
-      background-color: #f9fafb;
-    }
-    .paper-card {
-      border: 1px solid rgba(0,0,0,0.06);
-    }
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: var(--nav-offset);
-    }
-    .site-nav {
-      backdrop-filter: blur(14px);
-    }
-    .site-nav__list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem 1rem;
-    }
-    .page-shell {
-      width: min(100%, 72rem);
-      margin: 0 auto;
-      padding: 1.25rem 1rem 3rem;
-    }
-    .site-layout {
-      display: grid;
-      gap: 1.75rem;
-      align-items: start;
-    }
-    .profile-card {
-      background: var(--surface-soft);
-      border: 1px solid var(--border-subtle);
-      border-radius: 1.5rem;
-      padding: 1.25rem;
-      box-shadow: var(--shadow-soft);
-    }
-    .profile-card .author__avatar,
-    .profile-card .author__content,
-    .profile-card .author__urls-wrapper {
-      display: block;
-      width: 100%;
-      padding: 0;
-    }
-    .profile-card .author__avatar {
-      text-align: center;
-    }
-    .profile-card .author__avatar img {
-      display: block;
-      width: min(11rem, 46vw);
-      max-width: 100%;
-      margin: 0 auto;
-      border: 4px solid #fff;
-      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
-    }
-    .profile-card .author__content {
-      margin-top: 1rem;
-      text-align: center;
-    }
-    .profile-card .author__urls-wrapper {
-      margin-top: 1rem;
-    }
-    .profile-card .profile-location {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      margin: 0;
-      color: #4b5563;
-      font-size: 0.95rem;
-    }
-    .profile-card .social-icons {
-      margin: 0.75rem 0 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem;
-    }
-    .profile-card .social-icons li {
-      margin: 0;
-    }
-    .profile-card .social-icons a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.75rem;
-      height: 2.75rem;
-      border: 1px solid rgba(148, 163, 184, 0.28);
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-      color: #334155;
-      text-decoration: none;
-    }
-    .profile-card .social-icons a:hover {
-      color: #2563eb;
-      border-color: rgba(37, 99, 235, 0.28);
-      transform: translateY(-1px);
-    }
-    .profile-card .social-icons i {
-      width: auto;
-      margin: 0;
-      font-size: 1.05rem;
-    }
-    .profile-card .btn {
-      display: none;
-    }
-    .page-main {
-      min-width: 0;
-    }
-    .page-main .flex.items-baseline.justify-between {
-      gap: 1rem;
-    }
-    .news-table {
-      width: 100%;
-      border: 0;
-      margin-bottom: 0;
-    }
-    .news-table th,
-    .news-table td {
-      border: 0;
-      padding: 0.45rem 0;
-      vertical-align: top;
-    }
-    .news-table th {
-      width: 8.75rem;
-      color: #475569;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .news-table td {
-      padding-left: 1rem;
-    }
-    .page-main article.max-w-3xl {
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-    }
-    .page-main article footer {
-      flex-wrap: wrap;
-      row-gap: 0.65rem;
-    }
-    .section-actions a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.75rem;
-    }
-    @media (min-width: 64rem) {
-      .news-table {
-        width: auto;
-        max-width: 100%;
-      }
-      .news-table th,
-      .news-table td {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-      }
-      .news-table tr + tr th,
-      .news-table tr + tr td {
-        border-top: 1px solid rgba(15, 23, 42, 0.06);
-      }
-      .news-table th {
-        padding-right: 1rem;
-      }
-      .news-table td {
-        position: relative;
-        padding-left: 1rem;
-      }
-      .news-table td::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0.6rem;
-        bottom: 0.6rem;
-        width: 1px;
-        background: linear-gradient(
-          to bottom,
-          rgba(148, 163, 184, 0),
-          rgba(148, 163, 184, 0.35) 18%,
-          rgba(148, 163, 184, 0.35) 82%,
-          rgba(148, 163, 184, 0)
-        );
-      }
-      .page-shell {
-        width: min(100%, 64rem);
-        padding-top: 1.75rem;
-      }
-      .site-layout {
-        grid-template-columns: 12rem minmax(0, 1fr);
-        gap: 2.25rem;
-      }
-      .profile-rail {
-        position: sticky;
-        top: calc(var(--nav-offset) + 1rem);
-      }
-      .profile-card {
-        background: transparent;
-        border: 0;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 0.5rem 0 0;
-      }
-      .profile-card .author__avatar {
-        text-align: left;
-      }
-      .profile-card .author__avatar img {
-        width: 175px;
-        max-width: 175px;
-        margin: 0;
-        padding: 5px;
-        border: 1px solid #f2f3f3;
-        box-shadow: none;
-        background: transparent;
-      }
-      .profile-card .author__content {
-        margin-top: 0.85rem;
-        text-align: left;
-      }
-      .profile-card .author__urls-wrapper {
-        margin-top: 0.85rem;
-      }
-      .profile-card .profile-location {
-        justify-content: flex-start;
-        font-size: 0.85rem;
-      }
-      .profile-card .profile-location,
-      .profile-card .social-icons {
-        justify-content: flex-start;
-      }
-      .profile-card .social-icons {
-        gap: 0.55rem;
-      }
-      .profile-card .social-icons a {
-        width: auto;
-        height: auto;
-        padding: 0.1rem;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        color: #4b5563;
-      }
-      .profile-card .social-icons a:hover {
-        color: #2563eb;
-        border-color: transparent;
-        transform: none;
-      }
-      .page-main article.max-w-3xl {
-        box-shadow: none;
-      }
-    }
-    @media (max-width: 63.99rem) {
-      .news-table,
-      .news-table tbody,
-      .news-table tr,
-      .news-table th,
-      .news-table td {
-        display: block;
-        width: 100%;
-      }
-      .news-table tr {
-        padding: 0.95rem 0;
-        border-bottom: 1px solid var(--border-subtle);
-      }
-      .news-table tr:first-child {
-        padding-top: 0;
-      }
-      .news-table tr:last-child {
-        border-bottom: 0;
-        padding-bottom: 0;
-      }
-      .news-table th,
-      .news-table td {
-        padding: 0;
-      }
-      .news-table th {
-        margin-bottom: 0.35rem;
-      }
-      .page-main .flex.items-baseline.justify-between {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.25rem;
-      }
-      .page-main .ml-5 {
-        margin-left: 1rem;
-      }
-    }
-    @media (max-width: 40rem) {
-      :root {
-        --nav-offset: 6rem;
-      }
-      .page-shell {
-        padding-inline: 0.875rem;
-      }
-      .profile-card .social-icons {
-        margin-top: 0.95rem;
-      }
-      .site-nav__list {
-        justify-content: flex-start;
-      }
-      .site-nav__list a {
-        display: block;
-        padding: 0.45rem 0.85rem;
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        border-radius: 9999px;
-        background: rgba(255, 255, 255, 0.75);
-      }
-      .profile-card {
-        border-radius: 1.25rem;
-        padding: 1rem;
-      }
-      .page-main article.max-w-3xl header h2 {
-        line-height: 1.4;
-      }
-      .section-actions a {
-        width: 100%;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-    }
+    :root { --ink: #191918; --purple: #6b4c8a; --lilac: #9b7bb8; --paper: #f5f1eb; --muted: #777; --orange: #bf5a3a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+    body { background: var(--paper); color: var(--ink); font-family: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 1rem; letter-spacing: -0.01em; line-height: 1.8; }
+    a { color: var(--purple); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--lilac); text-decoration: underline; }
+    nav { position: sticky; top: 0; z-index: 10; padding: 16px 0; background: rgba(245, 241, 235, .95); border-bottom: 1px solid rgba(0,0,0,.06); backdrop-filter: blur(12px); }
+    nav ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; list-style: none; }
+    nav a { color: #555; font-size: 1.05rem; font-weight: 500; }
+    nav a:hover { color: var(--purple); text-decoration: none; }
+    .hero, .section, .section-divider { max-width: 960px; margin: 0 auto; }
+    .hero { padding: 56px 24px 40px; }
+    h1 { color: var(--purple); font-size: 2.6rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 10px; }
+    .tagline { color: var(--lilac); font-size: 1.08rem; font-weight: 500; margin-bottom: 10px; }
+    .hero p { color: #666; font-size: 1.08rem; margin-bottom: 10px; }
+    .highlight { margin: 16px 0; padding: 16px 20px; border-left: 3px solid var(--lilac); border-radius: 0 10px 10px 0; background: rgba(255,255,255,.45); color: #333 !important; font-size: 1.18rem !important; line-height: 1.75; }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .contact-links a { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 20px; font-size: 1rem; font-weight: 500; text-decoration: none; }
+    .contact-links .primary { background: linear-gradient(90deg, var(--purple), var(--lilac)); color: #fff; }
+    .contact-links .secondary { border: 1px solid rgba(0,0,0,.1); background: rgba(255,255,255,.5); color: #2d2d2d; }
+    .contact-links a:hover { color: #fff; box-shadow: 0 4px 12px rgba(107,76,138,.25); text-decoration: none; transform: translateY(-1px); }
+    .contact-links .secondary:hover { color: var(--purple); background: rgba(255,255,255,.8); }
+    .section { padding: 48px 24px; }
+    .section-divider { border: 0; border-top: 1px solid rgba(0,0,0,.06); }
+    .section h2 { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; color: var(--purple); font-family: "Source Serif 4", Georgia, serif; font-size: 1.7rem; font-weight: 400; letter-spacing: -.02em; line-height: 1.25; }
+    .section h3 { margin: 0 0 8px; color: var(--ink); font-size: 1.15rem; line-height: 1.35; }
+    .research-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .research-card { padding: 16px 18px; border: 1px solid rgba(0,0,0,.06); border-radius: 14px; background: rgba(255,255,255,.5); transition: all .2s; }
+    .research-card:hover { border-color: rgba(0,0,0,.08); background: rgba(255,255,255,.7); box-shadow: 0 4px 12px rgba(0,0,0,.04); transform: translateY(-1px); }
+    .research-card p { color: #666; font-size: .96rem; line-height: 1.55; margin-bottom: 10px; }
+    .paper-tags, .pub-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .paper-tags a, .pub-links a { padding: 3px 10px; border-radius: 6px; background: rgba(107,76,138,.06); color: var(--purple); font-size: .92rem; font-weight: 500; text-decoration: none; }
+    .paper-tags a:hover, .pub-links a:hover { background: rgba(107,76,138,.12); color: var(--purple); text-decoration: none; }
+    .current-focus { margin-top: 22px; color: #555; }
+    .current-focus strong { color: var(--orange); }
+    .timeline { position: relative; padding-left: 28px; }
+    .timeline::before { position: absolute; top: 8px; bottom: 8px; left: 8px; width: 1px; background: linear-gradient(180deg, #c9b8da, rgba(201,184,218,.2)); content: ""; }
+    .timeline-item { position: relative; margin-bottom: 22px; padding-left: 16px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-item::before { position: absolute; top: 9px; left: -24px; width: 7px; height: 7px; border-radius: 50%; background: #c9b8da; content: ""; }
+    .role { color: var(--ink); font-size: 1.1rem; font-weight: 600; }
+    .organisation { color: var(--purple); font-size: 1.05rem; }
+    .date { color: #999; font-size: .96rem; }
+    .timeline-item p { color: #666; font-size: .96rem; line-height: 1.6; margin-top: 5px; }
+    .pub-list { display: flex; flex-direction: column; gap: 0; }
+    .pub-item { padding: 16px; border-bottom: 1px solid rgba(0,0,0,.06); transition: background .2s; }
+    .pub-item:last-child { border-bottom: 0; }
+    .pub-item:hover { background: rgba(155,123,184,.03); }
+    .pub-title { color: var(--ink); font-family: "Source Serif 4", Georgia, serif; font-size: 1.24rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.35; margin-bottom: 5px; }
+    .pub-authors { color: #888; font-size: .98rem; line-height: 1.55; margin-bottom: 4px; }
+    .pub-authors strong { color: var(--purple); font-weight: 600; }
+    .pub-venue { color: #999; font-size: .97rem; line-height: 1.55; margin-bottom: 8px; }
+    .pub-venue strong { color: #555; }
+    .pub-highlight { color: var(--orange); font-weight: 600; }
+    .pub-more { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+    .pub-more.expanded { max-height: 1200px; }
+    .pub-toggle { display: block; margin: 14px auto 0; border: 0; background: none; color: var(--purple); cursor: pointer; font: inherit; font-size: 1rem; text-decoration: underline; }
+    .impact-group { margin-bottom: 22px; }
+    .impact-group:last-child { margin-bottom: 0; }
+    .impact-group h3 { color: var(--purple); font-family: "Source Serif 4", Georgia, serif; font-size: 1.22rem; font-weight: 500; }
+    .impact-group p { color: #555; font-size: 1rem; line-height: 1.65; }
+    .impact-group .metric { color: var(--orange); font-weight: 600; }
+    .impact-group .na { color: #999; font-weight: 500; }
+    footer { padding: 40px 20px; border-top: 1px solid rgba(0,0,0,.06); color: #999; font-size: .95rem; text-align: center; }
+    @media (max-width: 700px) { .hero { padding-top: 40px; } h1 { font-size: 2rem; } nav ul { gap: 16px; padding: 0 12px; } nav a { font-size: .95rem; } .research-grid { grid-template-columns: 1fr; } .section { padding: 38px 18px; } .hero { padding-left: 18px; padding-right: 18px; } .section h2 { font-size: 1.5rem; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
   </style>
-  <meta http-equiv="cleartype" content="on">
-  <!-- start custom head snippets -->
-  <link rel="apple-touch-icon" sizes="57x57" href="https://roymiles.github.io/images/apple-touch-icon-57x57.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="60x60" href="https://roymiles.github.io/images/apple-touch-icon-60x60.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="72x72" href="https://roymiles.github.io/images/apple-touch-icon-72x72.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="76x76" href="https://roymiles.github.io/images/apple-touch-icon-76x76.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="114x114" href="https://roymiles.github.io/images/apple-touch-icon-114x114.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="120x120" href="https://roymiles.github.io/images/apple-touch-icon-120x120.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="144x144" href="https://roymiles.github.io/images/apple-touch-icon-144x144.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="152x152" href="https://roymiles.github.io/images/apple-touch-icon-152x152.png?v=M44lzPylqQ">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://roymiles.github.io/images/apple-touch-icon-180x180.png?v=M44lzPylqQ">
-  <!--<link rel="icon" type="image/png" href="https://roymiles.github.io/images/favicon-32x32.png" sizes="32x32"><link rel="icon" type="image/png" href="https://roymiles.github.io/images/favicon-16x16.png" sizes="16x16"> -->
-  <link rel="icon" type="image/png" href="https://roymiles.github.io/images/favicon2.png" sizes="32x32">
-  <link rel="manifest" href="https://roymiles.github.io/images/manifest.json?v=M44lzPylqQ">
-  <link rel="mask-icon" href="https://roymiles.github.io/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000">
-  <link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ">
-  <meta name="msapplication-TileColor" content="#000000">
-  <meta name="msapplication-TileImage" content="https://roymiles.github.io/images/mstile-144x144.png?v=M44lzPylqQ">
-  <meta name="msapplication-config" content="https://roymiles.github.io/images/browserconfig.xml?v=M44lzPylqQ">
-  <meta name="theme-color" content="#ffffff">
-  <link rel="stylesheet" href="https://roymiles.github.io/assets/css/academicons.css"/>
-  <script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "all" } } }); </script> <script type="text/x-mathjax-config"> MathJax.Hub.Config({ tex2jax: { inlineMath: [ ['$','$'], ["\\(","\\)"] ], processEscapes: true } }); </script> <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
-  <meta name="google-site-verification" content="VbL8ZFqn-TqRX7AIia-ZlG7zE0nOSyeRgMMAW1SGe9o" />
-  <!-- end custom head snippets -->
 </head>
-<body class="min-h-screen">
-  <nav class="site-nav sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/90 shadow-sm">
-    <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-      <ul class="site-nav__list flex justify-center p-4 text-sm font-medium">
-        <li><a href="#publications" class="text-gray-700 hover:text-blue-600">Publications</a></li>
-        <li><a href="#cv" class="text-gray-700 hover:text-blue-600">CV</a></li>
-        <li><a href="/blog/knowledge-distillation/" class="text-gray-700 hover:text-blue-600">Blog</a></li>
-      </ul>
-    </div>
+<body>
+  <nav aria-label="Primary navigation">
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#experience">Education &amp; Experience</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#impact">Impact</a></li>
+    </ul>
   </nav>
 
-  <!-- Main content -->
-  <div class="page-shell">
-    <div class="site-layout">
-		<aside class="profile-rail">
-			<div class="profile-card" itemscope itemtype="http://schema.org/Person">
-			   <div class="author__avatar"><img src="https://roymiles.github.io/images/profile.png" alt="Roy Miles"></div>
-			   <div class="author__content">
-				  <h1 class="text-2xl font-semibold text-gray-800">Roy Miles</h1>
-				  <p class="mt-3 text-sm text-gray-600 leading-relaxed">Research Scientist focused on efficient computer vision, knowledge distillation, and mobile AI.</p>
-			   </div>
-			   <div class="author__urls-wrapper">
-				  <p class="profile-location"><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i><span>London, UK</span></p>
-				  <ul class="social-icons">
-					 <li><a href="https://twitter.com/miles12roy" aria-label="Twitter" title="Twitter"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a></li>
-					 <li><a href="https://www.linkedin.com/in/roy-miles" aria-label="LinkedIn" title="LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span class="visually-hidden">LinkedIn</span></a></li>
-					 <li><a href="https://github.com/roymiles" aria-label="GitHub" title="GitHub"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a></li>
-					 <li><a href="https://www.stackoverflow.com/users/1582331/roy" aria-label="Stack Overflow" title="Stack Overflow"><i class="fab fa-fw fa-stack-overflow" aria-hidden="true"></i><span class="visually-hidden">Stack Overflow</span></a></li>
-					 <li><a href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ" aria-label="Google Scholar" title="Google Scholar"><i class="fas fa-fw fa-graduation-cap" aria-hidden="true"></i><span class="visually-hidden">Google Scholar</span></a></li>
-				  </ul>
-			   </div>
-			</div>
-		</aside>
+  <main>
+    <section class="hero" id="about">
+      <h1>Roy Miles</h1>
+      <p class="tagline">Senior Research Scientist @ Huawei Noah's Ark Lab UK · London, United Kingdom</p>
+      <p>I work on efficient foundation models, multimodal learning, and mobile computer vision.</p>
+      <p class="highlight">Current focus: making post-training for vision-language and language models more memory-efficient and practical. I am interested in how distillation, parameter-efficient fine-tuning, and new training strategies can lower the cost of adapting capable models without compromising quality. The goal is to turn those advances into reliable methods that work under real product and hardware constraints.</p>
+      <div class="contact-links">
+        <a class="primary" href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ">Google Scholar</a>
+        <a class="secondary" href="https://github.com/roymiles">GitHub</a>
+        <a class="secondary" href="https://www.linkedin.com/in/roy-miles">LinkedIn</a>
+      </div>
+    </section>
 
-      <main class="page-main">
-        <section>
-          <p class="mt-3 text-base text-gray-700 leading-relaxed">I am currently a Research Scientist at Huawei Noah's Ark UK. My research has been primarily on the topic of building efficient computer vision models and deploying them on resource constrained devices, such as mobile phones.</p>
-        </section>
-		<section class="mt-6">
-			<h3 class="text-base font-semibold text-gray-800">News</h3>
-			<div class="mt-4 space-y-4 text-base text-gray-700 table-responsive">
-			  <table class="news-table">
-			   <tbody>
-				<tr>
-				   <th scope="row">Mar 27, 2026</th>
-				   <td>
-				       New <a href="/blog/knowledge-distillation/" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">blog post</a>: a visual guide to knowledge distillation.
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Feb 26, 2026</th>
-				   <td>
-				       🌟 <a href="/diffstitching/" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">New project page</a> for <a href="https://arxiv.org/abs/2602.22871" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">Test-Time Scaling of Diffusion Language Models</a>. [<a href="https://github.com/roymiles/diffusion-stitching" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a>]
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Nov 7, 2025</th>
-				   <td>
-				       <a href="https://arxiv.org/abs/2410.14332" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">ViCToR</a> was accepted to AAAI 2026. [<a href="https://github.com/deepglint/Victor" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a>]
-				   </td>
-				</tr>	
-				<tr>
-				   <th scope="row">June 25, 2025</th>
-				   <td>
-				       <a href="https://www.arxiv.org/pdf/2507.20025" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">RICE</a> (Highlight) was accepted to ICCV 2025. [<a href="https://github.com/deepglint/MVT" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a>]
-				   </td>
-				</tr>			
-				<tr>
-				   <th scope="row">May 23, 2024</th>
-				   <td>
-				       <a href="https://arxiv.org/abs/2405.17991" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">VeLoRA</a> was accepted to NeurIPS 2024. [<a href="https://github.com/roymiles/VeLoRA" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a>]
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Mar 1, 2024</th>
-				   <td>
-					  Started a permanent role as a research scientist at Huawei!
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Feb 26, 2024</th>
-				   <td>
-					  <a href="https://openaccess.thecvf.com/content/CVPR2024/papers/Miles_VkD_Improving_Knowledge_Distillation_using_Orthogonal_Projections_CVPR_2024_paper.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">VkD</a> was accepted to CVPR 2024. [<a href="https://github.com/roymiles/vkd" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a> / <a href="https://roymiles.github.io/assets/pdf/CVPR24___Poster___VkD.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">poster</a>]
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Dec 12, 2023</th>
-				   <td>
-					  Passed my PhD with minor corrections [<a href="https://spiral.imperial.ac.uk/handle/10044/1/112354" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">thesis</a>, <a href="https://roymiles.github.io/assets/pdf/thesis.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">pdf</a>]
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Dec 9, 2023</th>
-				   <td>
-					  <a href="https://ojs.aaai.org/index.php/AAAI/article/view/28219" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">SRD</a> was accepted to AAAI 2024. [<a href="https://github.com/roymiles/Simple-Recipe-Distillation" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">code</a>, <a href="https://roymiles.github.io/assets/pdf/AAAI24___Poster.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">poster</a>]
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Jul 1, 2023</th>
-				   <td>
-					  Started my internship at Huawei Noah's Ark Lab in the Computer Vision team.
-				   </td>
-				</tr>
-				<tr>
-				   <th scope="row">Feb 27, 2023</th>
-				   <td>
-					  <a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Miles_MobileVOS_Real-Time_Video_Object_Segmentation_Contrastive_Learning_Meets_Knowledge_Distillation_CVPR_2023_paper.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">MobileVOS</a> was accepted to CVPR 2023. [<a href="https://roymiles.github.io/assets/pdf/CVPR23___Poster.pdf" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">poster</a>]
-				   </td>
-				</tr>
-			  </tbody></table>
-		   </div>
-		</section>
-        <section class="mt-6">
-          <h3 id="publications" class="text-base font-semibold text-gray-800 scroll-mt-20">Publications</h3>
-          <div class="mt-4 space-y-4 text-sm text-gray-700">
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/diffstitching_costs.png" alt="Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="/diffstitching/">Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Aysim Toker, Andreea-Maria Oncescu, Songcen Xu, Jiankang Deng and Ismail Elezi<br>
-					  <em>In arXiv preprint</em> 2026
-					</p>
-				  </header>
+    <hr class="section-divider">
 
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					We turn cheap diffusion-sampled reasoning into a reusable pool of step-level candidates, score them with a process reward model, and stitch the strongest pieces into a composite rationale for a downstream solver.
-				  </p>
+    <section class="section" id="research">
+      <h2>Current focus: efficient foundation models</h2>
+      <div class="research-grid">
+        <article class="research-card">
+          <h3>Post-training &amp; adaptation</h3>
+          <p>Knowledge distillation, parameter-efficient fine-tuning, and memory-efficient learning for VLMs and LLMs.</p>
+          <div class="paper-tags"><a href="https://openreview.net/forum?id=bFoQXD7Uls">VeLoRA</a><a href="https://openaccess.thecvf.com/content/CVPR2024/papers/Miles_VkD_Improving_Knowledge_Distillation_using_Orthogonal_Projections_CVPR_2024_paper.pdf">VkD</a></div>
+        </article>
+        <article class="research-card">
+          <h3>Multimodal learning</h3>
+          <p>Visual representation learning, visual grounding, and visual-language model pre-training.</p>
+          <div class="paper-tags"><a href="https://arxiv.org/abs/2410.14332">ViCToR</a><a href="https://arxiv.org/abs/2507.20025">RICE</a></div>
+        </article>
+        <article class="research-card">
+          <h3>Mobile &amp; on-device inference</h3>
+          <p>Compact, fast vision models designed for resource-constrained devices and product cameras.</p>
+          <div class="paper-tags"><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Miles_MobileVOS_Real-Time_Video_Object_Segmentation_Contrastive_Learning_Meets_Knowledge_Distillation_CVPR_2023_paper.pdf">MobileVOS</a><a href="https://arxiv.org/abs/2602.22871">Diffusion</a></div>
+        </article>
+      </div>
+      <p class="current-focus">Currently exploring <strong>test-time scaling for diffusion language models</strong>.</p>
+    </section>
 
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="/diffstitching/" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">project page</a>
-					<a class="github-button"
-					   href="https://github.com/roymiles/diffusion-stitching"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2602.22871" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2602.22871-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/rice.png" alt="Region-based Cluster Discrimination for Visual Representation Learning"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://iccv.thecvf.com/virtual/2025/poster/1504" target="_blank" rel="noreferrer">Region-based Cluster Discrimination for Visual Representation Learning</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  Yin Xie, Kaicheng Yang, Xiang An, Kun Wu, Yongle Zhao, Weimo Deng, Zimin Ran, Yumeng Wang, Ziyong Feng, <u>Roy Miles</u>, Ismail Elezi and Jiankang Deng<br>
-					  <em>In ICCV (highlight)</em> 2025
-					</p>
-				  </header>
+    <hr class="section-divider">
 
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Propose a novel Locality-Aware Cluster Contrastive Learning strategy. Our approach leverages local feature clustering and contrastive learning to improve the model's ability to understand and represent localized information. 
-				  </p>
+    <section class="section" id="experience">
+      <h2>Education &amp; Experience</h2>
+      <div class="timeline">
+        <article class="timeline-item">
+          <div><span class="role">Senior Research Scientist</span> <span class="organisation">— Huawei Noah's Ark Lab UK</span> <span class="date">(2023 – Present)</span></div>
+          <p>Post-training research for VLMs and LLMs, covering distillation, PEFT, and memory-efficient training. Developed product-adopted fine-tuning methods for large-scale vision models.</p>
+        </article>
+        <article class="timeline-item">
+          <div><span class="role">Research Scientist</span> <span class="organisation">— Samsung Research UK</span> <span class="date">(2022 – 2023)</span></div>
+          <p>Developed semi-supervised video object segmentation for mobile devices. The work was integrated into a Samsung mobile product and received the SRUK 2023 Best Paper Award.</p>
+        </article>
+        <article class="timeline-item">
+          <div><span class="role">PhD, Computer Vision</span> <span class="organisation">— Imperial College London</span> <span class="date">(2018 – 2023)</span></div>
+          <p>Thesis: <a href="https://spiral.imperial.ac.uk/handle/10044/1/112354">Towards Resource Efficient Vision Models</a>. Supervised by Prof. Krystian Mikolajczyk.</p>
+        </article>
+        <article class="timeline-item">
+          <div><span class="role">MEng, Electrical &amp; Electronic Engineering</span> <span class="organisation">— University of Bristol</span> <span class="date">(2014 – 2018)</span></div>
+          <p>First Class Honours. Thesis on an FPGA-based pipeline for object classification using binarized neural networks.</p>
+        </article>
+      </div>
+    </section>
 
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2507.20025" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2507.20025-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/victor.png" alt="ViCToR: Improving Visual Comprehension via Token Reconstruction for Pretraining LMMs"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://arxiv.org/abs/2410.14332" target="_blank" rel="noreferrer">ViCToR: Improving Visual Comprehension via Token Reconstruction for Pretraining LMMs</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  Yin Xie, Kaicheng Yang, Peirou Liang, Xiang An, Yongle Zhao, Yumeng Wang, Ziyong Feng, <u>Roy Miles</u>, Ismail Elezi, Jiankang Deng<br>
-					  <em>In AAAI</em> 2025
-					</p>
-				  </header>
+    <hr class="section-divider">
 
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Introduce a visual comprehension stage, which we call ViCToR (Visual Comprehension via Token Reconstruction), a novel pretraining framework for LMMs. ViCToR employs a learnable visual token pool and utilizes the Hungarian matching algorithm to select semantically relevant tokens from this pool for visual token replacement.
-				  </p>
+    <section class="section" id="publications">
+      <h2>Selected Papers</h2>
+      <div class="pub-list">
+        <article class="pub-item">
+          <h3 class="pub-title">Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching</h3>
+          <p class="pub-authors"><strong>Roy Miles</strong>, Aysim Toker, Andreea-Maria Oncescu, Songcen Xu, Jiankang Deng, and Ismail Elezi</p>
+          <p class="pub-venue"><strong>arXiv preprint, 2026</strong> — Diffusion language models and test-time scaling</p>
+          <div class="pub-links"><a href="https://arxiv.org/abs/2602.22871">PDF</a><a href="https://github.com/roymiles/diffusion-stitching">Code</a></div>
+        </article>
+        <article class="pub-item">
+          <h3 class="pub-title">Region-based Cluster Discrimination for Visual Representation Learning</h3>
+          <p class="pub-authors">Yin Xie, Kaicheng Yang, Xiang An, Kun Wu, Yongle Zhao, Weimo Deng, Zimin Ran, Yumeng Wang, Ziyong Feng, <strong>Roy Miles</strong>, Ismail Elezi, and Jiankang Deng</p>
+          <p class="pub-venue"><strong>ICCV 2025</strong> <span class="pub-highlight">— Highlight</span></p>
+          <div class="pub-links"><a href="https://arxiv.org/abs/2507.20025">PDF</a><a href="https://github.com/deepglint/MVT">Code</a></div>
+        </article>
+        <article class="pub-item">
+          <h3 class="pub-title">VeLoRA: Memory Efficient Training using Rank-1 Sub-Token Projections</h3>
+          <p class="pub-authors"><strong>Roy Miles</strong>, Pradyumna Reddy, Ismail Elezi, and Jiankang Deng</p>
+          <p class="pub-venue"><strong>NeurIPS 2024</strong> — Memory-efficient foundation-model training</p>
+          <div class="pub-links"><a href="https://openreview.net/forum?id=bFoQXD7Uls">PDF</a><a href="https://github.com/roymiles/VeLoRA">Code</a></div>
+        </article>
+        <article class="pub-item">
+          <h3 class="pub-title">VkD: Improving Knowledge Distillation using Orthogonal Projections</h3>
+          <p class="pub-authors"><strong>Roy Miles</strong>, Ismail Elezi, and Jiankang Deng</p>
+          <p class="pub-venue"><strong>CVPR 2024</strong> — Knowledge distillation</p>
+          <div class="pub-links"><a href="https://openaccess.thecvf.com/content/CVPR2024/papers/Miles_VkD_Improving_Knowledge_Distillation_using_Orthogonal_Projections_CVPR_2024_paper.pdf">PDF</a><a href="https://github.com/roymiles/vkd">Code</a></div>
+        </article>
+        <article class="pub-item">
+          <h3 class="pub-title">MobileVOS: Real-time Video Object Segmentation</h3>
+          <p class="pub-authors"><strong>Roy Miles</strong>, Mehmet Kerim Yucel, Bruno Manganelli, and Albert Saa-Garriga</p>
+          <p class="pub-venue"><strong>CVPR 2023</strong> <span class="pub-highlight">— SRUK 2023 Best Paper Award</span></p>
+          <div class="pub-links"><a href="https://openaccess.thecvf.com/content/CVPR2023/papers/Miles_MobileVOS_Real-Time_Video_Object_Segmentation_Contrastive_Learning_Meets_Knowledge_Distillation_CVPR_2023_paper.pdf">PDF</a></div>
+        </article>
+      </div>
+      <div class="pub-more" id="more-papers">
+        <div class="pub-list">
+          <article class="pub-item"><h3 class="pub-title">Understanding the Role of the Projector in Knowledge Distillation</h3><p class="pub-authors"><strong>Roy Miles</strong> and Krystian Mikolajczyk</p><p class="pub-venue"><strong>AAAI 2024</strong> — Knowledge distillation</p><div class="pub-links"><a href="https://ojs.aaai.org/index.php/AAAI/article/view/28219">PDF</a><a href="https://github.com/roymiles/Simple-Recipe-Distillation">Code</a></div></article>
+          <article class="pub-item"><h3 class="pub-title">Information Theoretic Representation Distillation</h3><p class="pub-authors"><strong>Roy Miles</strong>*, Adrian Lopez Rodriguez*, and Krystian Mikolajczyk</p><p class="pub-venue"><strong>BMVC 2022</strong> — Representation distillation</p><div class="pub-links"><a href="https://arxiv.org/abs/2112.00459">PDF</a></div></article>
+          <article class="pub-item"><h3 class="pub-title">Compression of Descriptor Models for Mobile Applications</h3><p class="pub-authors"><strong>Roy Miles</strong> and Krystian Mikolajczyk</p><p class="pub-venue"><strong>ICASSP 2021</strong> — Efficient local descriptors</p><div class="pub-links"><a href="https://arxiv.org/abs/2001.03102">PDF</a></div></article>
+          <article class="pub-item"><h3 class="pub-title">Cascaded Channel Pruning using Hierarchical Self-Distillation</h3><p class="pub-authors"><strong>Roy Miles</strong> and Krystian Mikolajczyk</p><p class="pub-venue"><strong>BMVC 2020</strong> — Pruning and self-distillation</p><div class="pub-links"><a href="https://arxiv.org/abs/2008.06814">PDF</a></div></article>
+        </div>
+      </div>
+      <button class="pub-toggle" type="button" aria-expanded="false" aria-controls="more-papers">Show more papers ↓</button>
+      <p class="current-focus">See my <a href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ">Google Scholar</a> for a full list.</p>
+    </section>
 
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a class="github-button"
-					   href="https://github.com/deepglint/Victor"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2410.14332" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2410.14332-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/velora.png" alt="VeLoRA: Memory Efficient Training using Rank-1 Sub-Token Projections"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://openreview.net/forum?id=bFoQXD7Uls" target="_blank" rel="noreferrer">VeLoRA: Memory Efficient Training using Rank-1 Sub-Token Projections</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Pradyumna Reddy, Ismail Elezi and Jiankang Deng<br>
-					  <em>In NeurIPS</em> 2024
-					</p>
-				  </header>
+    <hr class="section-divider">
 
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Identify and characterise the important components needed for effective model convergence using gradient descent. In doing so we find that the intermediate activations used to implement backpropagation can be excessively compressed without incurring any degradation in performance.
-				  </p>
+    <section class="section" id="impact">
+      <h2>Community Impact</h2>
+      <div class="impact-group">
+        <h3>Academic impact:</h3>
+        <p><span class="metric">300+ citations on 1st-author papers</span><br><span class="metric">6+ international patents</span> on efficient vision and foundation models.<br>Peer-reviewed publications at CVPR, NeurIPS, ICCV <span class="metric">(Highlight)</span>, AAAI, BMVC, and ICASSP.</p>
+      </div>
+      <div class="impact-group">
+        <h3>Open-source impact:</h3>
+        <p>Released code alongside published research.<br>Contributor to ⚗️ <a href="https://github.com/yoshitomo-matsubara/torchdistill">torchdistill</a> and 🤗 HuggingFace PEFT.</p>
+      </div>
+      <div class="impact-group">
+        <h3>Service:</h3>
+        <p><span class="metric">NeurIPS 2024 Outstanding Reviewer</span><br>Reviewer for ICLR, NeurIPS, CVPR, ICCV, ECCV, AAAI, PAMI, BMVC, and other ML and computer-vision venues.</p>
+      </div>
+      <div class="impact-group">
+        <h3>Scholarship:</h3>
+        <p>CDT High Performance Embedded and Distributed Systems (HiPEDS) scholarship.<br>First Class Honours, MEng Electrical and Electronic Engineering, University of Bristol.</p>
+      </div>
+    </section>
+  </main>
 
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a class="github-button"
-					   href="https://github.com/roymiles/VeLoRA"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2405.17991" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2405.17991-b31b1b.svg" alt="arXiv link">
-					</a>
-					<a href="https://www.semanticscholar.org/paper/VeLoRA%3A-Memory-Efficient-Training-using-Rank-1-Miles-Reddy/f1f85dfdf48c55bff969d397cd60dd8df5d85c4d" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/-Semantic%20Scholar-1857B6?style=flat&logo=semanticscholar&logoColor=white">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/vkd.PNG" alt="VkD: Improving Knowledge Distillation using Orthogonal Projections"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://openaccess.thecvf.com/content/CVPR2024/html/Miles_VkD_Improving_Knowledge_Distillation_using_Orthogonal_Projections_CVPR_2024_paper.html" target="_blank" rel="noreferrer">VkD: Improving Knowledge Distillation using Orthogonal Projections</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Ismail Elezi and Jiankang Deng <br>
-					  <em>In CVPR</em> 2024
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Proposed a novel constrained feature distillation method. This method is derived from a small set of core principles, which results in two emerging components: an orthogonal projection and a task-specific normalisation.
-				  </p>
-
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a class="github-button"
-					   href="https://github.com/roymiles/VkD"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2403.06213" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2403.06213-b31b1b.svg" alt="arXiv link">
-					</a>
-					<a href="https://www.semanticscholar.org/paper/%24V_%7Bk%7DD%24%3A-Improving-Knowledge-Distillation-Using-Miles-Elezi/a1153143b384a5a776b31ff80468138837b27fa0" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/-Semantic%20Scholar-1857B6?style=flat&logo=semanticscholar&logoColor=white">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/srd.PNG" alt="Understanding the Role of the Projector in Knowledge Distillation"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://ojs.aaai.org/index.php/AAAI/article/view/28219" target="_blank" rel="noreferrer">Understanding the Role of the Projector in Knowledge Distillation</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u> and Krystian Mikolajczyk <br>
-					  <em>In AAAI</em> 2024
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Revisit the efficacy of knowledge distillation as a function matching and metric learning problem. In doing so we verify three important design decisions, namely the normalisation, soft maximum function, and projection layers as key ingredients.
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a class="github-button"
-					   href="https://github.com/roymiles/Simple-Recipe-Distillation"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2303.11098" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2303.11098-b31b1b.svg" alt="arXiv link">
-					</a>
-					<a href="https://www.semanticscholar.org/paper/Understanding-the-Role-of-the-Projector-in-Miles-Mikolajczyk/d24a0b0bda424d011b24228ba90163421f7a31f2" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/-Semantic%20Scholar-1857B6?style=flat&logo=semanticscholar&logoColor=white">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/crosstask.PNG" alt="Learning to Project for Cross-Task
-Knowledge Distillation"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://bmva-archive.org.uk/bmvc/2024/papers/Paper_448/paper.pdf" target="_blank" rel="noreferrer">Learning to Project for Cross-Task
-Knowledge Distillation</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  Dylan Auty*, <u>Roy Miles</u>*, Benedikt Kolbeinsson*, Krystian Mikolajczyk<br>
-					  <em>In BMVC</em> 2024
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Many KD methods prove ineffective when applied to this cross-task setting. To address this limitation, we propose a simple modification: the use of an inverted projection. We show that this drop-in replacement for a standard projector is effective by learning to disregard any task-specific features which might degrade the student's performance. 
-				  </p>
-
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2403.14494" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2403.14494-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/mobilevos.png" alt="MobileVOS: Real-time Video Object Segmentation"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://openaccess.thecvf.com/content/CVPR2023/html/Miles_MobileVOS_Real-Time_Video_Object_Segmentation_Contrastive_Learning_Meets_Knowledge_Distillation_CVPR_2023_paper.html" target="_blank" rel="noreferrer">MobileVOS: Real-time Video Object Segmentation</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Mehmet Kerim Yucel, Bruno Manganelli and Albert Saa-Garriga <br>
-					  <em>In CVPR</em> 2024
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					Tackling the problem of semi-supervised video object segmentation on resource-constrained devices, such as mobile phones. We formulate this problem as a distillation task, whereby we demonstrate that small space-time-memory networks with finite memory can achieve competitive results with state of the art, but at a fraction of the computational cost.
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2303.07815" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2303.07815-b31b1b.svg" alt="arXiv link">
-					</a>
-					<a href="https://www.semanticscholar.org/paper/MobileVOS%3A-Real-Time-Video-Object-Segmentation-Miles-Yucel/6dab08e8bf55591f45f6fa4259abeb9fd38263ce" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/-Semantic%20Scholar-1857B6?style=flat&logo=semanticscholar&logoColor=white">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/filters.PNG" alt="Reconstructing Pruned Filters using Cheap Spatial Transformations"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://openaccess.thecvf.com/content/ICCV2023W/RCV/html/Miles_Reconstructing_Pruned_Filters_Using_Cheap_Spatial_Transformations_ICCVW_2023_paper.html" target="_blank" rel="noreferrer">Reconstructing Pruned Filters using Cheap Spatial Transformations</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u> and Krystian Mikolajczyk<br>
-					  <em>In ICCVW</em> 2024
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					We present an efficient alternative to the convolutional layer using cheap spatial transformations. This construction exploits an inherent spatial redundancy of the learned convolutional filters to enable a much greater parameter efficiency, while maintaining the top-end accuracy of their dense counter-parts.
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2110.12844" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2110.12844-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/itrd.png" alt="Information Theoretic Representation Distillation"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://bmvc2022.mpi-inf.mpg.de/0385.pdf" target="_blank" rel="noreferrer">Information Theoretic Representation Distillation </a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles*</u>, Adrian Lopez Rodriguez*, Krystian Mikolajczyk <br>
-					  <em>In BMVC</em> 2022
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					 Introduce two distinct complementary losses inspired by a cheap entropy-like estimator. These losses aim to maximise the correlation and mutual information between the student and teacher representations. 
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a class="github-button"
-					   href="https://github.com/roymiles/ITRD"
-					   data-icon="octicon-star"
-					   data-size="large"
-					   data-show-count="true"
-					   aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-					<a href="https://arxiv.org/abs/2112.00459" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2112.00459-b31b1b.svg" alt="arXiv link">
-					</a>
-					<a href="https://www.semanticscholar.org/paper/Information-Theoretic-Representation-Distillation-Miles-Rodr'iguez/bedb5992c7c2941964e62cd075df63c02b7864d5" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/-Semantic%20Scholar-1857B6?style=flat&logo=semanticscholar&logoColor=white">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/descriptors.PNG" alt="Compression of Descriptor Models for Mobile Applications"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://ieeexplore.ieee.org/document/9414416/" target="_blank" rel="noreferrer">Compression of Descriptor Models for Mobile Applications</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Krystian Mikolajczyk <br>
-					  <em>In ICASSP</em> 2021
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					 This paper explicitly addresses the practical performance metrics of the state-of-the-art HardNet model. We observe a significant redundancy in the learned weights, which we exploit through the use of depthwise separable layers and an efficient Tucker decomposition.
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2001.03102" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2001.03102-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<article class="max-w-3xl mx-auto bg-white border border-gray-200 rounded-2xl overflow-hidden">
-			  <div class="grid grid-cols-1 md:grid-cols-3">
-				<div class="md:col-span-1 p-4 table w-full">
-					<div class="align-middle table-cell">
-					<img src="https://roymiles.github.io/images/cascadedpruning.png" alt="Cascaded Channel Pruning using Hierarchical Self-Distillation"/>
-					</div>
-				</div>
-				<div class="md:col-span-2 p-4 flex flex-col justify-between">
-				  <header>
-					<h2 class="text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors">
-					  <a href="https://www.bmvc2020-conference.com/assets/papers/0525.pdf" target="_blank" rel="noreferrer">Cascaded Channel Pruning using Hierarchical Self-Distillation</a>
-					</h2>
-					<p class="mt-2 text-sm text-gray-500">
-					  <u>Roy Miles</u>, Krystian Mikolajczyk <br>
-					  <em>In BMVC</em> 2020
-					</p>
-				  </header>
-
-				  <p class="mt-4 text-gray-600 line-clamp-3">
-					 Propose an approach for filter-level pruning with hierarchical knowledge distillation based on the teacher, teaching-assistant, and student framework. Our method makes use of teaching assistants at intermediate pruning levels that share the same architecture and weights as the target student.
-				  </p>
-				  <footer class="mt-6 flex items-center gap-4 text-sm">
-					<a href="https://arxiv.org/abs/2008.06814" target="_blank" class="pb-3 pt-2">
-					  <img src="https://img.shields.io/badge/arXiv-2008.06814-b31b1b.svg" alt="arXiv link">
-					</a>
-				  </footer>
-				</div>
-			  </div>
-			</article>
-			<p>See my <a class="text-blue-500 hover:text-blue-700 transition-colors duration-200" href="https://scholar.google.com/citations?user=Fev4G4YAAAAJ" target="_blank">Google Scholar</a> for a full list.</p>
-          </div>
-        </section>
-        <section class="mt-6">
-          <h3 id="cv" class="text-base font-semibold text-gray-800 scroll-mt-20">Research and Industry Experience</h3>
-          <div class="mt-4 space-y-4 text-sm text-gray-700">
-            <article>
-              <div class="flex items-baseline justify-between">
-                <h4 class="font-medium">Senior Research Scientist — Huawei Noah's Ark Lab</h4>
-                <span class="text-sm text-gray-500">01/2023 — Present</span>
-              </div>
-			  <div class="ml-5">
-				  <ul class="list-disc mt-1 text-sm text-gray-600">
-				  <li>Foundational research on knowledge distillation for vision-language models.</li>
-				  <li>Involved in the recruitment and interviews stages for several permanent and internship positions.</li>
-				  <li>Collaboration and leading several successful research projects.</li>
-				  <li>Award for outstanding individual contributor in 2024.</li>
-				  <li>Managed several interns with their topics on multi-modality learning.</li>
-				  <li>Integrated and landed research on parameter efficient fine-tuning with the product camera teams.</li>
-				  </ul>
-			  </div>
-            </article>
-            <article>
-              <div class="flex items-baseline justify-between">
-                <h4 class="font-medium">Research Scientist Intern - Samsung Research UK</h4>
-                <span class="text-sm text-gray-500">06/2022 — 01/2023</span>
-              </div>
-			  <div class="ml-5">
-				  <ul class="list-disc mt-1 text-sm text-gray-600">
-				  <li>Semi-supervised video object segmentation for mobile devices</li>
-				  <li>Novel unification of representation distillation and contrastive learning.</li>
-				  <li>Achieved competitive performance despite running up to ×5 faster, and with ×32 fewer parameters.</li>
-				  <li>Integrated research code into Samsung's mobile product.</li>
-				  <li>SRUK 2023 Best Paper Award for MobileVOS presented at CVPR. [<a href="https://research.samsung.com/blog/MobileVOS-Real-Time-Video-Object-Segmentation-Contrastive-Learning-Meets-Knowledge-Distillation" class="text-blue-500 hover:text-blue-700 transition-colors duration-200">blog</a>]</li>
-				  </ul>
-			  </div>
-            </article>
-            <article>
-              <div class="flex items-baseline justify-between">
-                <h4 class="font-medium">Software Engineer Intern - Waymont Consulting</h4>
-                <span class="text-sm text-gray-500">06/2017 — 09/2017</span>
-              </div>
-			  <div class="ml-5">
-				  <ul class="list-disc mt-1 text-sm text-gray-600">
-				  <li>Developed a responsive web GUI with a C++ backend to automate signal processing tests.</li>
-				  <li>Replaced previously manual testing system and increased efficiency by hundredfold.</li>
-				  </ul>
-			  </div>
-            </article>
-            <article>
-              <div class="flex items-baseline justify-between">
-                <h4 class="font-medium">Software Engineer Intern - Toshiba Research Europe</h4>
-                <span class="text-sm text-gray-500">06/2016 — 09/2016</span>
-              </div>
-			  <div class="ml-5">
-				  <ul class="list-disc mt-1 text-sm text-gray-600">
-				  <li>Designed out-of-tree blocks in C++ using the GNURadio signal processing environment.</li>
-				  <li>Characterised and linearised a communication channel between two USRP devices.</li>
-				  <li>Utilised the RC-5 Infrared standard for short-range and low-data rate IoT applications.</li>
-				  </ul>
-			  </div>
-            </article>
-            <article>
-              <div class="flex items-baseline justify-between">
-                <h4 class="font-medium">Software Engineer Intern - Toshiba Research Europe</h4>
-                <span class="text-sm text-gray-500">06/2015 — 09/2015</span>
-              </div>
-			  <div class="ml-5">
-				  <ul class="list-disc mt-1 text-sm text-gray-600">
-				  <li>Developed a GUI to operate a motor-driven positioner in conjunction with a VNA.</li>
-				  <li>Measured various antenna patterns within an anechoic chamber.</li>
-				  <li>VB.NET code to synchronize two X-Y positioners for analyzing propagation channels.</li>
-				  </ul>
-			  </div>
-            </article>
-          </div>
-        </section>
-        <section class="mt-6">
-          <h3 class="text-sm font-semibold text-gray-800">Education</h3>
-          <div class="mt-3 text-sm text-gray-700">
-            <div class="flex items-baseline justify-between">
-              <div>PhD, Computer Vision and Machine Learning — Imperial College London</div>
-              <div class="text-sm text-gray-500">10/2018 — 12/2023</div>
-            </div>
-          </div>
-          <div class="mt-3 text-sm text-gray-700">
-            <div class="flex items-baseline justify-between">
-              <div>MEng, Electrical and Electronic Engineering — University of Bristol</div>
-              <div class="text-sm text-gray-500">09/2014 — 07/2018</div>
-            </div>
-          </div>
-        </section>
-		<section class="mt-6">
-			<h3 class="text-base font-semibold text-gray-800">Patents</h3>
-			<div class="ml-5">
-			  <ul class="list-disc mt-1 text-sm text-gray-600">
-			  <li>Real-Time Video Object Segmentation. Patent <a class="text-blue-500 hover:text-blue-700 transition-colors duration-200" href="https://www.ipo.gov.uk/p-ipsum/Case/PublicationNumber/GB2626221">#GB2626221</a>. Samsung Research UK.</li>
-			  <li>Region-aware Foundational Vision Model. Huawei Noah's Ark Lab UK. Patent Pending.</li>
-			  <li>Visual Grounding for Vision-Language Models. Huawei Noah's Ark Lab UK. Patent Pending.</li>
-			  <li>Training-Free Image Retouching. Huawei Noah's Ark Lab UK. Patent Pending.</li>
-			  </ul>
-			</div>
-		</section>
-		<section class="mt-6">
-			<h3 class="text-base font-semibold text-gray-800">Reviewing Experience</h3>
-			<p class="mt-3 text-sm text-gray-700">• ICCV 2025 • AAAI 2025 • PAMI 2023, 2024 • ECCV 2022 2024 • CVPR 2023, 2024, 2025 • NeurIPS 2023, 2024 • BMVC 2021, 2022 • Neurocomputing 2024 • ICSOC 2024 • Neural Networks 2025</p>
-			<p class="mt-3 text-sm text-gray-700"><a class="text-blue-500 hover:text-blue-700 transition-colors duration-200" href="https://neurips.cc/Conferences/2024/ProgramCommittee" target="_blank">NeurIPS 2024 outstanding reviewer</a></p>
-		</section>
-		<section class="section-actions mt-6 flex flex-wrap gap-3">
-          <a href="https://www.linkedin.com/in/roy-miles/" class="text-sm border border-gray-200 rounded-full px-3 py-1 shadow-sm">Contact</a>
-        </section>
-        <!--<div class="mt-4 text-xs text-gray-500">Designed with a pencil aesthetic • Simple, print-friendly layout</div>-->
-      </main>
-    </div>
-  </div>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
+  <footer>Roy Miles © 2026</footer>
+  <script>
+    const toggle = document.querySelector('.pub-toggle');
+    const more = document.querySelector('#more-papers');
+    toggle.addEventListener('click', () => {
+      const expanded = more.classList.toggle('expanded');
+      toggle.setAttribute('aria-expanded', expanded);
+      toggle.textContent = expanded ? 'Show fewer papers ↑' : 'Show more papers ↓';
+    });
+  </script>
 </body>
 </html>
